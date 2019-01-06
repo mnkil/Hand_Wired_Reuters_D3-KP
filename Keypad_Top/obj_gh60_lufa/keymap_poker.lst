@@ -1,0 +1,58 @@
+   1               		.file	"keymap_poker.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               	.global	fn_actions
+  12               		.section	.progmem.data.fn_actions,"a",@progbits
+  15               	fn_actions:
+  16 0000 F1A6      		.word	-22799
+  17 0002 218A      		.word	-30175
+  18 0004 228A      		.word	-30174
+  19 0006 2913      		.word	4905
+  20 0008 F1A7      		.word	-22543
+  21 000a 018C      		.word	-29695
+  22 000c 028C      		.word	-29694
+  23 000e 048C      		.word	-29692
+  24 0010 088C      		.word	-29688
+  25               	.global	keymaps
+  26               		.section	.progmem.data.keymaps,"a",@progbits
+  29               	keymaps:
+  30 0000 16        		.byte	22
+  31 0001 0D        		.byte	13
+  32 0002 0F        		.byte	15
+  33 0003 52        		.byte	82
+  34 0004 05        		.byte	5
+  35 0005 04        		.byte	4
+  36 0006 12        		.byte	18
+  37 0007 10        		.byte	16
+  38 0008 51        		.byte	81
+  39 0009 19        		.byte	25
+  40 000a 2C        		.byte	44
+  41 000b 2B        		.byte	43
+  42 000c E0        		.byte	-32
+  43 000d E2        		.byte	-30
+  44 000e 09        		.byte	9
+  45               		.text
+  46               	.Letext0:
+  47               		.file 1 "c:\\program files (x86)\\mhv avr tools\\avr\\include\\stdint.h"
+  48               		.file 2 "../../tmk_core/common/keycode.h"
+  49               		.file 3 "../../tmk_core/common/action_code.h"
+  50               		.file 4 "keymap_poker.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 keymap_poker.c
+C:\msys64\tmp\ccuusMPd.s:2      *ABS*:0000003e __SP_H__
+C:\msys64\tmp\ccuusMPd.s:3      *ABS*:0000003d __SP_L__
+C:\msys64\tmp\ccuusMPd.s:4      *ABS*:0000003f __SREG__
+C:\msys64\tmp\ccuusMPd.s:5      *ABS*:0000003b __RAMPZ__
+C:\msys64\tmp\ccuusMPd.s:6      *ABS*:00000000 __tmp_reg__
+C:\msys64\tmp\ccuusMPd.s:7      *ABS*:00000001 __zero_reg__
+C:\msys64\tmp\ccuusMPd.s:15     .progmem.data.fn_actions:00000000 fn_actions
+C:\msys64\tmp\ccuusMPd.s:29     .progmem.data.keymaps:00000000 keymaps
+
+NO UNDEFINED SYMBOLS

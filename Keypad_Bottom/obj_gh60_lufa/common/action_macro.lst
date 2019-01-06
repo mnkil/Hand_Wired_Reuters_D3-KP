@@ -1,0 +1,658 @@
+   1               		.file	"action_macro.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               		.section	.text.action_macro_play,"ax",@progbits
+  12               	.global	action_macro_play
+  14               	action_macro_play:
+  15               	.LFB10:
+  16               		.file 1 "../../tmk_core/common/action_macro.c"
+   1:../../tmk_core/common/action_macro.c **** /*
+   2:../../tmk_core/common/action_macro.c **** Copyright 2013 Jun Wako <wakojun@gmail.com>
+   3:../../tmk_core/common/action_macro.c **** 
+   4:../../tmk_core/common/action_macro.c **** This program is free software: you can redistribute it and/or modify
+   5:../../tmk_core/common/action_macro.c **** it under the terms of the GNU General Public License as published by
+   6:../../tmk_core/common/action_macro.c **** the Free Software Foundation, either version 2 of the License, or
+   7:../../tmk_core/common/action_macro.c **** (at your option) any later version.
+   8:../../tmk_core/common/action_macro.c **** 
+   9:../../tmk_core/common/action_macro.c **** This program is distributed in the hope that it will be useful,
+  10:../../tmk_core/common/action_macro.c **** but WITHOUT ANY WARRANTY; without even the implied warranty of
+  11:../../tmk_core/common/action_macro.c **** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  12:../../tmk_core/common/action_macro.c **** GNU General Public License for more details.
+  13:../../tmk_core/common/action_macro.c **** 
+  14:../../tmk_core/common/action_macro.c **** You should have received a copy of the GNU General Public License
+  15:../../tmk_core/common/action_macro.c **** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  16:../../tmk_core/common/action_macro.c **** */
+  17:../../tmk_core/common/action_macro.c **** #include "action.h"
+  18:../../tmk_core/common/action_macro.c **** #include "action_util.h"
+  19:../../tmk_core/common/action_macro.c **** #include "action_macro.h"
+  20:../../tmk_core/common/action_macro.c **** #include "wait.h"
+  21:../../tmk_core/common/action_macro.c **** 
+  22:../../tmk_core/common/action_macro.c **** #ifdef DEBUG_ACTION
+  23:../../tmk_core/common/action_macro.c **** #include "debug.h"
+  24:../../tmk_core/common/action_macro.c **** #else
+  25:../../tmk_core/common/action_macro.c **** #include "nodebug.h"
+  26:../../tmk_core/common/action_macro.c **** #endif
+  27:../../tmk_core/common/action_macro.c **** 
+  28:../../tmk_core/common/action_macro.c **** 
+  29:../../tmk_core/common/action_macro.c **** #ifndef NO_ACTION_MACRO
+  30:../../tmk_core/common/action_macro.c **** 
+  31:../../tmk_core/common/action_macro.c **** #define MACRO_READ()  (macro = MACRO_GET(macro_p++))
+  32:../../tmk_core/common/action_macro.c **** void action_macro_play(const macro_t *macro_p)
+  33:../../tmk_core/common/action_macro.c **** {
+  17               		.loc 1 33 0
+  18               		.cfi_startproc
+  19               	.LVL0:
+  20 0000 DF92      		push r13
+  21               	.LCFI0:
+  22               		.cfi_def_cfa_offset 3
+  23               		.cfi_offset 13, -2
+  24 0002 EF92      		push r14
+  25               	.LCFI1:
+  26               		.cfi_def_cfa_offset 4
+  27               		.cfi_offset 14, -3
+  28 0004 FF92      		push r15
+  29               	.LCFI2:
+  30               		.cfi_def_cfa_offset 5
+  31               		.cfi_offset 15, -4
+  32 0006 0F93      		push r16
+  33               	.LCFI3:
+  34               		.cfi_def_cfa_offset 6
+  35               		.cfi_offset 16, -5
+  36 0008 1F93      		push r17
+  37               	.LCFI4:
+  38               		.cfi_def_cfa_offset 7
+  39               		.cfi_offset 17, -6
+  40 000a CF93      		push r28
+  41               	.LCFI5:
+  42               		.cfi_def_cfa_offset 8
+  43               		.cfi_offset 28, -7
+  44 000c DF93      		push r29
+  45               	.LCFI6:
+  46               		.cfi_def_cfa_offset 9
+  47               		.cfi_offset 29, -8
+  48               	/* prologue: function */
+  49               	/* frame size = 0 */
+  50               	/* stack size = 7 */
+  51               	.L__stack_usage = 7
+  52 000e FC01      		movw r30,r24
+  53               	.LVL1:
+  34:../../tmk_core/common/action_macro.c ****     macro_t macro = END;
+  35:../../tmk_core/common/action_macro.c ****     uint8_t interval = 0;
+  36:../../tmk_core/common/action_macro.c **** 
+  37:../../tmk_core/common/action_macro.c ****     uint8_t mod_storage = 0;
+  38:../../tmk_core/common/action_macro.c **** 
+  39:../../tmk_core/common/action_macro.c ****     if (!macro_p) return;
+  54               		.loc 1 39 0
+  55 0010 0097      		sbiw r24,0
+  56 0012 01F4      		brne .+2
+  57 0014 00C0      		rjmp .L1
+  58 0016 E12C      		mov r14,__zero_reg__
+  59 0018 F12C      		mov r15,__zero_reg__
+  40:../../tmk_core/common/action_macro.c ****     while (true) {
+  41:../../tmk_core/common/action_macro.c ****         switch (MACRO_READ()) {
+  42:../../tmk_core/common/action_macro.c ****             case KEY_DOWN:
+  43:../../tmk_core/common/action_macro.c ****                 MACRO_READ();
+  44:../../tmk_core/common/action_macro.c ****                 dprintf("KEY_DOWN(%02X)\n", macro);
+  45:../../tmk_core/common/action_macro.c ****                 if (IS_MOD(macro)) {
+  46:../../tmk_core/common/action_macro.c ****                     add_weak_mods(MOD_BIT(macro));
+  60               		.loc 1 46 0
+  61 001a DD24      		clr r13
+  62 001c D394      		inc r13
+  63               	.LVL2:
+  64               	.L21:
+  65               	.LBB13:
+  41:../../tmk_core/common/action_macro.c ****             case KEY_DOWN:
+  66               		.loc 1 41 0
+  67 001e EF01      		movw r28,r30
+  68 0020 2196      		adiw r28,1
+  69               	.LVL3:
+  70               	/* #APP */
+  71               	 ;  41 "../../tmk_core/common/action_macro.c" 1
+  72 0022 8491      		lpm r24, Z
+  73               		
+  74               	 ;  0 "" 2
+  75               	.LVL4:
+  76               	/* #NOAPP */
+  77               	.LBE13:
+  78 0024 8537      		cpi r24,lo8(117)
+  79 0026 01F4      		brne .+2
+  80 0028 00C0      		rjmp .L3
+  81 002a 00F4      		brsh .L4
+  82 002c 8437      		cpi r24,lo8(116)
+  83 002e 00F0      		brlo .+2
+  84 0030 00C0      		rjmp .L5
+  85 0032 8430      		cpi r24,lo8(4)
+  86 0034 00F0      		brlo .+2
+  87 0036 00C0      		rjmp .L6
+  88 0038 8130      		cpi r24,lo8(1)
+  89 003a 01F0      		breq .L7
+  90 003c 8230      		cpi r24,lo8(2)
+  91 003e 01F0      		breq .L8
+  92 0040 00C0      		rjmp .L1
+  93               	.L4:
+  94 0042 8837      		cpi r24,lo8(120)
+  95 0044 01F4      		brne .+2
+  96 0046 00C0      		rjmp .L9
+  97 0048 00F4      		brsh .L10
+  98 004a 8637      		cpi r24,lo8(118)
+  99 004c 01F4      		brne .+2
+ 100 004e 00C0      		rjmp .L11
+ 101 0050 8737      		cpi r24,lo8(119)
+ 102 0052 01F0      		breq .+2
+ 103 0054 00C0      		rjmp .L1
+  47:../../tmk_core/common/action_macro.c ****                     send_keyboard_report();
+  48:../../tmk_core/common/action_macro.c ****                 } else {
+  49:../../tmk_core/common/action_macro.c ****                     register_code(macro);
+  50:../../tmk_core/common/action_macro.c ****                 }
+  51:../../tmk_core/common/action_macro.c ****                 break;
+  52:../../tmk_core/common/action_macro.c ****             case KEY_UP:
+  53:../../tmk_core/common/action_macro.c ****                 MACRO_READ();
+  54:../../tmk_core/common/action_macro.c ****                 dprintf("KEY_UP(%02X)\n", macro);
+  55:../../tmk_core/common/action_macro.c ****                 if (IS_MOD(macro)) {
+  56:../../tmk_core/common/action_macro.c ****                     del_weak_mods(MOD_BIT(macro));
+  57:../../tmk_core/common/action_macro.c ****                     send_keyboard_report();
+  58:../../tmk_core/common/action_macro.c ****                 } else {
+  59:../../tmk_core/common/action_macro.c ****                     unregister_code(macro);
+  60:../../tmk_core/common/action_macro.c ****                 }
+  61:../../tmk_core/common/action_macro.c ****                 break;
+  62:../../tmk_core/common/action_macro.c ****             case WAIT:
+  63:../../tmk_core/common/action_macro.c ****                 MACRO_READ();
+  64:../../tmk_core/common/action_macro.c ****                 dprintf("WAIT(%u)\n", macro);
+  65:../../tmk_core/common/action_macro.c ****                 { uint8_t ms = macro; while (ms--) wait_ms(1); }
+  66:../../tmk_core/common/action_macro.c ****                 break;
+  67:../../tmk_core/common/action_macro.c ****             case INTERVAL:
+  68:../../tmk_core/common/action_macro.c ****                 interval = MACRO_READ();
+  69:../../tmk_core/common/action_macro.c ****                 dprintf("INTERVAL(%u)\n", interval);
+  70:../../tmk_core/common/action_macro.c ****                 break;
+  71:../../tmk_core/common/action_macro.c ****             case MOD_STORE:
+  72:../../tmk_core/common/action_macro.c ****                 mod_storage = get_mods();
+  73:../../tmk_core/common/action_macro.c ****                 break;
+  74:../../tmk_core/common/action_macro.c ****             case MOD_RESTORE:
+  75:../../tmk_core/common/action_macro.c ****                 set_mods(mod_storage);
+ 104               		.loc 1 75 0
+ 105 0056 8E2D      		mov r24,r14
+ 106               	.LVL5:
+ 107 0058 0E94 0000 		call set_mods
+ 108               	.LVL6:
+ 109 005c 00C0      		rjmp .L29
+ 110               	.LVL7:
+ 111               	.L10:
+  41:../../tmk_core/common/action_macro.c ****             case KEY_DOWN:
+ 112               		.loc 1 41 0
+ 113 005e 9CE7      		ldi r25,lo8(124)
+ 114 0060 980F      		add r25,r24
+ 115 0062 9037      		cpi r25,lo8(112)
+ 116 0064 00F0      		brlo .+2
+ 117 0066 00C0      		rjmp .L1
+  76:../../tmk_core/common/action_macro.c ****                 send_keyboard_report();
+  77:../../tmk_core/common/action_macro.c ****                 break;
+  78:../../tmk_core/common/action_macro.c ****             case MOD_CLEAR:
+  79:../../tmk_core/common/action_macro.c ****                 clear_mods();
+  80:../../tmk_core/common/action_macro.c ****                 send_keyboard_report();
+  81:../../tmk_core/common/action_macro.c ****                 break;
+  82:../../tmk_core/common/action_macro.c ****             case 0x04 ... 0x73:
+  83:../../tmk_core/common/action_macro.c ****                 dprintf("DOWN(%02X)\n", macro);
+  84:../../tmk_core/common/action_macro.c ****                 register_code(macro);
+  85:../../tmk_core/common/action_macro.c ****                 break;
+  86:../../tmk_core/common/action_macro.c ****             case 0x84 ... 0xF3:
+  87:../../tmk_core/common/action_macro.c ****                 dprintf("UP(%02X)\n", macro);
+  88:../../tmk_core/common/action_macro.c ****                 unregister_code(macro&0x7F);
+ 118               		.loc 1 88 0
+ 119 0068 8F77      		andi r24,lo8(127)
+ 120               	.LVL8:
+ 121 006a 0E94 0000 		call unregister_code
+ 122               	.LVL9:
+  89:../../tmk_core/common/action_macro.c ****                 break;
+ 123               		.loc 1 89 0
+ 124 006e 00C0      		rjmp .L15
+ 125               	.LVL10:
+ 126               	.L7:
+ 127               	.LBB14:
+  43:../../tmk_core/common/action_macro.c ****                 dprintf("KEY_DOWN(%02X)\n", macro);
+ 128               		.loc 1 43 0
+ 129 0070 8F01      		movw r16,r30
+ 130 0072 0E5F      		subi r16,-2
+ 131 0074 1F4F      		sbci r17,-1
+ 132               	.LVL11:
+ 133 0076 FE01      		movw r30,r28
+ 134               	.LVL12:
+ 135               	/* #APP */
+ 136               	 ;  43 "../../tmk_core/common/action_macro.c" 1
+ 137 0078 8491      		lpm r24, Z
+ 138               		
+ 139               	 ;  0 "" 2
+ 140               	.LVL13:
+ 141               	/* #NOAPP */
+ 142               	.LBE14:
+  45:../../tmk_core/common/action_macro.c ****                     add_weak_mods(MOD_BIT(macro));
+ 143               		.loc 1 45 0
+ 144 007a 90E2      		ldi r25,lo8(32)
+ 145 007c 980F      		add r25,r24
+ 146 007e 9830      		cpi r25,lo8(8)
+ 147 0080 00F4      		brsh .L14
+  46:../../tmk_core/common/action_macro.c ****                     send_keyboard_report();
+ 148               		.loc 1 46 0
+ 149 0082 8770      		andi r24,lo8(7)
+ 150               	.LVL14:
+ 151 0084 FD2D      		mov r31,r13
+ 152 0086 00C0      		rjmp 2f
+ 153               		1:
+ 154 0088 FF0F      		lsl r31
+ 155               		2:
+ 156 008a 8A95      		dec r24
+ 157 008c 02F4      		brpl 1b
+ 158 008e 8F2F      		mov r24,r31
+ 159 0090 0E94 0000 		call add_weak_mods
+ 160               	.LVL15:
+ 161 0094 00C0      		rjmp .L26
+ 162               	.LVL16:
+ 163               	.L14:
+  49:../../tmk_core/common/action_macro.c ****                 }
+ 164               		.loc 1 49 0
+ 165 0096 0E94 0000 		call register_code
+ 166               	.LVL17:
+ 167 009a 00C0      		rjmp .L27
+ 168               	.LVL18:
+ 169               	.L8:
+ 170               	.LBB15:
+  53:../../tmk_core/common/action_macro.c ****                 dprintf("KEY_UP(%02X)\n", macro);
+ 171               		.loc 1 53 0
+ 172 009c 8F01      		movw r16,r30
+ 173 009e 0E5F      		subi r16,-2
+ 174 00a0 1F4F      		sbci r17,-1
+ 175               	.LVL19:
+ 176 00a2 FE01      		movw r30,r28
+ 177               	.LVL20:
+ 178               	/* #APP */
+ 179               	 ;  53 "../../tmk_core/common/action_macro.c" 1
+ 180 00a4 8491      		lpm r24, Z
+ 181               		
+ 182               	 ;  0 "" 2
+ 183               	.LVL21:
+ 184               	/* #NOAPP */
+ 185               	.LBE15:
+  55:../../tmk_core/common/action_macro.c ****                     del_weak_mods(MOD_BIT(macro));
+ 186               		.loc 1 55 0
+ 187 00a6 90E2      		ldi r25,lo8(32)
+ 188 00a8 980F      		add r25,r24
+ 189 00aa 9830      		cpi r25,lo8(8)
+ 190 00ac 00F4      		brsh .L16
+  56:../../tmk_core/common/action_macro.c ****                     send_keyboard_report();
+ 191               		.loc 1 56 0
+ 192 00ae 8770      		andi r24,lo8(7)
+ 193               	.LVL22:
+ 194 00b0 FD2D      		mov r31,r13
+ 195 00b2 00C0      		rjmp 2f
+ 196               		1:
+ 197 00b4 FF0F      		lsl r31
+ 198               		2:
+ 199 00b6 8A95      		dec r24
+ 200 00b8 02F4      		brpl 1b
+ 201 00ba 8F2F      		mov r24,r31
+ 202 00bc 0E94 0000 		call del_weak_mods
+ 203               	.LVL23:
+ 204               	.L26:
+  57:../../tmk_core/common/action_macro.c ****                 } else {
+ 205               		.loc 1 57 0
+ 206 00c0 0E94 0000 		call send_keyboard_report
+ 207               	.LVL24:
+ 208               	.L27:
+ 209               	.LBB16:
+  53:../../tmk_core/common/action_macro.c ****                 dprintf("KEY_UP(%02X)\n", macro);
+ 210               		.loc 1 53 0
+ 211 00c4 E801      		movw r28,r16
+ 212               	.LVL25:
+ 213               	.LBE16:
+ 214 00c6 00C0      		rjmp .L15
+ 215               	.LVL26:
+ 216               	.L16:
+  59:../../tmk_core/common/action_macro.c ****                 }
+ 217               		.loc 1 59 0
+ 218 00c8 0E94 0000 		call unregister_code
+ 219               	.LVL27:
+ 220 00cc 00C0      		rjmp .L27
+ 221               	.LVL28:
+ 222               	.L5:
+ 223               	.LBB17:
+  63:../../tmk_core/common/action_macro.c ****                 dprintf("WAIT(%u)\n", macro);
+ 224               		.loc 1 63 0
+ 225 00ce 9F01      		movw r18,r30
+ 226 00d0 2E5F      		subi r18,-2
+ 227 00d2 3F4F      		sbci r19,-1
+ 228               	.LVL29:
+ 229 00d4 FE01      		movw r30,r28
+ 230               	.LVL30:
+ 231               	/* #APP */
+ 232               	 ;  63 "../../tmk_core/common/action_macro.c" 1
+ 233 00d6 C491      		lpm r28, Z
+ 234               		
+ 235               	 ;  0 "" 2
+ 236               	.LVL31:
+ 237               	/* #NOAPP */
+ 238               	.L17:
+ 239               	.LBE17:
+ 240               	.LBB18:
+  65:../../tmk_core/common/action_macro.c ****                 break;
+ 241               		.loc 1 65 0 discriminator 1
+ 242 00d8 CC23      		tst r28
+ 243 00da 01F0      		breq .L28
+ 244               	.LVL32:
+ 245               	.LBB19:
+ 246               	.LBB20:
+ 247               		.file 2 "c:\\program files (x86)\\mhv avr tools\\avr\\include\\util\\delay.h"
+   1:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    All rights reserved.
+   5:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+   6:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+   9:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    * Redistributions of source code must retain the above copyright
+  10:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  12:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      the documentation and/or other materials provided with the
+  15:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      distribution.
+  16:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  17:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      contributors may be used to endorse or promote products derived
+  19:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****      from this software without specific prior written permission.
+  20:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  21:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  33:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /* $Id: delay.h.in 2385 2013-05-03 13:14:20Z joerg_wunsch $ */
+  34:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  35:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #ifndef _UTIL_DELAY_H_
+  36:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #define _UTIL_DELAY_H_ 1
+  37:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  38:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #define __HAS_DELAY_CYCLES 1
+  40:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #endif
+  41:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  42:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #include <inttypes.h>
+  43:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #include <util/delay_basic.h>
+  44:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #include <math.h>
+  45:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  46:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /** \file */
+  47:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  48:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     \code
+  49:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  50:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     //#define F_CPU 14.7456E6
+  51:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     #include <util/delay.h>
+  52:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     \endcode
+  53:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  54:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     \note As an alternative method, it is possible to pass the
+  55:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  56:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     Obviously, in that case, no \c \#define statement should be
+  57:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     used.
+  58:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  59:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     The functions in this header file are wrappers around the basic
+  60:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  61:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     convenience functions where actual time values can be specified
+  62:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  63:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     that compile-time constant expressions will be eliminated by
+  64:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     compiler optimization so floating-point expressions can be used
+  65:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  66:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     frequency passed by the macro F_CPU.
+  67:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  68:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     \note In order for these functions to work as intended, compiler
+  69:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  70:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     <em>must</em> be an expression that is a known constant at
+  71:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     compile-time.  If these requirements are not met, the resulting
+  72:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     delay will be much longer (and basically unpredictable), and
+  73:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     applications that otherwise do not use floating-point calculations
+  74:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     will experience severe code bloat by the floating-point library
+  75:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     routines linked into the application.
+  76:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  77:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     The functions available allow the specification of microsecond, and
+  78:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     millisecond delays directly, using the application-supplied macro
+  79:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  80:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  81:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** */
+  82:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  83:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #if !defined(__DOXYGEN__)
+  84:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  85:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  86:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #endif
+  87:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  88:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #ifndef F_CPU
+  89:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /* prevent compiler error by supplying a default */
+  90:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  91:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** # define F_CPU 1000000UL
+  92:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #endif
+  93:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  94:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #ifndef __OPTIMIZE__
+  95:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  96:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #endif
+  97:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+  98:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+  99:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 100:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   __STDC_HOSTED__
+ 101:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #  include <math.h>
+ 102:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #endif
+ 103:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 104:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** /**
+ 105:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    \ingroup util_delay
+ 106:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 107:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 108:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 109:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    The macro F_CPU is supposed to be defined to a
+ 110:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 111:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 112:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 113:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 114:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    When the user request delay which exceed the maximum possible one,
+ 115:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 116:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 117:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 118:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    user will not be informed about decreased resolution.
+ 119:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 120:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    If the avr-gcc toolchain has __builtin_avr_delay_cycles(unsigned long)
+ 121:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    support, maximal possible delay is 4294967.295 ms/ F_CPU in MHz. For
+ 122:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    values greater than the maximal possible delay, overflows results in
+ 123:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    no delay i.e., 0ms.
+ 124:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 125:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Conversion of __us into clock cycles may not always result in integer.
+ 126:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    By default, the clock cycles rounded up to next integer. This ensures that
+ 127:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    the user gets atleast __us microseconds of delay.
+ 128:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 129:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Alternatively, user can define __DELAY_ROUND_DOWN__ and __DELAY_ROUND_CLOSEST__
+ 130:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    to round down and round to closest integer.
+ 131:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 132:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Note: The new implementation of _delay_ms(double __ms) with 
+ 133:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****     __builtin_avr_delay_cycles(unsigned long) support is not backward compatible. 
+ 134:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    User can define __DELAY_BACKWARD_COMPATIBLE__ to get a backward compatible delay.
+ 135:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    Also, the backward compatible
+ 136:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    algorithm will be chosen if the code is compiled in a <em>freestanding
+ 137:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    environment</em> (GCC option \c -ffreestanding), as the math functions
+ 138:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****    required for rounding are not available to the compiler then.
+ 139:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 140:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****  */
+ 141:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** void
+ 142:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** _delay_ms(double __ms)
+ 143:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** {
+ 144:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	double __tmp ; 
+ 145:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+ 146:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 147:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h ****   __STDC_HOSTED__
+ 148:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	uint32_t __ticks_dc;
+ 149:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 150:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	__tmp = ((F_CPU) / 1e3) * __ms;
+ 151:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 152:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	#if defined(__DELAY_ROUND_DOWN__)
+ 153:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 		__ticks_dc = (uint32_t)fabs(__tmp);
+ 154:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 155:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	#elif defined(__DELAY_ROUND_CLOSEST__)
+ 156:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 		__ticks_dc = (uint32_t)(fabs(__tmp)+0.5);
+ 157:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 158:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	#else
+ 159:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 		//round up by default
+ 160:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+ 161:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	#endif
+ 162:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 
+ 163:c:\program files (x86)\mhv avr tools\avr\include\util\delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
+ 248               		.loc 2 163 0
+ 249 00dc 8FE9      		ldi r24,lo8(3999)
+ 250 00de 9FE0      		ldi r25,hi8(3999)
+ 251 00e0 0197      		1: sbiw r24,1
+ 252 00e2 01F4      		brne 1b
+ 253 00e4 00C0      		rjmp .
+ 254 00e6 0000      		nop
+ 255 00e8 C150      		subi r28,lo8(-(-1))
+ 256               	.LVL33:
+ 257 00ea 00C0      		rjmp .L17
+ 258               	.LVL34:
+ 259               	.L3:
+ 260               	.LBE20:
+ 261               	.LBE19:
+ 262               	.LBE18:
+ 263               	.LBB21:
+  68:../../tmk_core/common/action_macro.c ****                 dprintf("INTERVAL(%u)\n", interval);
+ 264               		.loc 1 68 0
+ 265 00ec 9F01      		movw r18,r30
+ 266 00ee 2E5F      		subi r18,-2
+ 267 00f0 3F4F      		sbci r19,-1
+ 268               	.LVL35:
+ 269 00f2 FE01      		movw r30,r28
+ 270               	.LVL36:
+ 271               	/* #APP */
+ 272               	 ;  68 "../../tmk_core/common/action_macro.c" 1
+ 273 00f4 F490      		lpm r15, Z
+ 274               		
+ 275               	 ;  0 "" 2
+ 276               	.LVL37:
+ 277               	/* #NOAPP */
+ 278               	.L28:
+ 279 00f6 E901      		movw r28,r18
+ 280               	.LBE21:
+  70:../../tmk_core/common/action_macro.c ****             case MOD_STORE:
+ 281               		.loc 1 70 0
+ 282 00f8 00C0      		rjmp .L15
+ 283               	.LVL38:
+ 284               	.L11:
+  72:../../tmk_core/common/action_macro.c ****                 break;
+ 285               		.loc 1 72 0
+ 286 00fa 0E94 0000 		call get_mods
+ 287               	.LVL39:
+ 288 00fe E82E      		mov r14,r24
+ 289               	.LVL40:
+  73:../../tmk_core/common/action_macro.c ****             case MOD_RESTORE:
+ 290               		.loc 1 73 0
+ 291 0100 00C0      		rjmp .L15
+ 292               	.LVL41:
+ 293               	.L9:
+  79:../../tmk_core/common/action_macro.c ****                 send_keyboard_report();
+ 294               		.loc 1 79 0
+ 295 0102 0E94 0000 		call clear_mods
+ 296               	.LVL42:
+ 297               	.L29:
+  80:../../tmk_core/common/action_macro.c ****                 break;
+ 298               		.loc 1 80 0
+ 299 0106 0E94 0000 		call send_keyboard_report
+ 300               	.LVL43:
+  81:../../tmk_core/common/action_macro.c ****             case 0x04 ... 0x73:
+ 301               		.loc 1 81 0
+ 302 010a 00C0      		rjmp .L15
+ 303               	.LVL44:
+ 304               	.L6:
+  84:../../tmk_core/common/action_macro.c ****                 break;
+ 305               		.loc 1 84 0
+ 306 010c 0E94 0000 		call register_code
+ 307               	.LVL45:
+ 308               	.L15:
+ 309               	.LBB22:
+  90:../../tmk_core/common/action_macro.c ****             case END:
+  91:../../tmk_core/common/action_macro.c ****             default:
+  92:../../tmk_core/common/action_macro.c ****                 return;
+  93:../../tmk_core/common/action_macro.c ****         }
+  94:../../tmk_core/common/action_macro.c ****         // interval
+  95:../../tmk_core/common/action_macro.c ****         { uint8_t ms = interval; while (ms--) wait_ms(1); }
+ 310               		.loc 1 95 0
+ 311 0110 9F2D      		mov r25,r15
+ 312               	.LVL46:
+ 313               	.L19:
+ 314               		.loc 1 95 0 is_stmt 0 discriminator 1
+ 315 0112 9923      		tst r25
+ 316 0114 01F0      		breq .L31
+ 317               	.LVL47:
+ 318               	.LBB23:
+ 319               	.LBB24:
+ 320               		.loc 2 163 0 is_stmt 1
+ 321 0116 EFE9      		ldi r30,lo8(3999)
+ 322 0118 FFE0      		ldi r31,hi8(3999)
+ 323 011a 3197      		1: sbiw r30,1
+ 324 011c 01F4      		brne 1b
+ 325 011e 00C0      		rjmp .
+ 326 0120 0000      		nop
+ 327 0122 9150      		subi r25,lo8(-(-1))
+ 328               	.LVL48:
+ 329 0124 00C0      		rjmp .L19
+ 330               	.LVL49:
+ 331               	.L31:
+ 332               	.LBE24:
+ 333               	.LBE23:
+ 334               		.loc 1 95 0
+ 335 0126 FE01      		movw r30,r28
+ 336 0128 00C0      		rjmp .L21
+ 337               	.LVL50:
+ 338               	.L1:
+ 339               	/* epilogue start */
+ 340               	.LBE22:
+  96:../../tmk_core/common/action_macro.c ****     }
+  97:../../tmk_core/common/action_macro.c **** }
+ 341               		.loc 1 97 0
+ 342 012a DF91      		pop r29
+ 343 012c CF91      		pop r28
+ 344 012e 1F91      		pop r17
+ 345 0130 0F91      		pop r16
+ 346 0132 FF90      		pop r15
+ 347 0134 EF90      		pop r14
+ 348 0136 DF90      		pop r13
+ 349 0138 0895      		ret
+ 350               		.cfi_endproc
+ 351               	.LFE10:
+ 353               		.text
+ 354               	.Letext0:
+ 355               		.file 3 "c:\\program files (x86)\\mhv avr tools\\avr\\include\\stdint.h"
+ 356               		.file 4 "../../tmk_core/common/action_macro.h"
+ 357               		.file 5 "../../tmk_core/common/keycode.h"
+ 358               		.file 6 "../../tmk_core/common/action_util.h"
+ 359               		.file 7 "../../tmk_core/common/action.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 action_macro.c
+C:\msys64\tmp\ccRpxkrU.s:2      *ABS*:0000003e __SP_H__
+C:\msys64\tmp\ccRpxkrU.s:3      *ABS*:0000003d __SP_L__
+C:\msys64\tmp\ccRpxkrU.s:4      *ABS*:0000003f __SREG__
+C:\msys64\tmp\ccRpxkrU.s:5      *ABS*:0000003b __RAMPZ__
+C:\msys64\tmp\ccRpxkrU.s:6      *ABS*:00000000 __tmp_reg__
+C:\msys64\tmp\ccRpxkrU.s:7      *ABS*:00000001 __zero_reg__
+C:\msys64\tmp\ccRpxkrU.s:14     .text.action_macro_play:00000000 action_macro_play
+
+UNDEFINED SYMBOLS
+set_mods
+unregister_code
+add_weak_mods
+register_code
+del_weak_mods
+send_keyboard_report
+get_mods
+clear_mods

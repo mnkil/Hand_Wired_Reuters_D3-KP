@@ -1,0 +1,2930 @@
+   1               		.file	"action.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               		.section	.text.action_exec,"ax",@progbits
+  12               	.global	action_exec
+  14               	action_exec:
+  15               	.LFB4:
+  16               		.file 1 "../../tmk_core/common/action.c"
+   1:../../tmk_core/common/action.c **** /*
+   2:../../tmk_core/common/action.c **** Copyright 2012,2013 Jun Wako <wakojun@gmail.com>
+   3:../../tmk_core/common/action.c **** 
+   4:../../tmk_core/common/action.c **** This program is free software: you can redistribute it and/or modify
+   5:../../tmk_core/common/action.c **** it under the terms of the GNU General Public License as published by
+   6:../../tmk_core/common/action.c **** the Free Software Foundation, either version 2 of the License, or
+   7:../../tmk_core/common/action.c **** (at your option) any later version.
+   8:../../tmk_core/common/action.c **** 
+   9:../../tmk_core/common/action.c **** This program is distributed in the hope that it will be useful,
+  10:../../tmk_core/common/action.c **** but WITHOUT ANY WARRANTY; without even the implied warranty of
+  11:../../tmk_core/common/action.c **** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  12:../../tmk_core/common/action.c **** GNU General Public License for more details.
+  13:../../tmk_core/common/action.c **** 
+  14:../../tmk_core/common/action.c **** You should have received a copy of the GNU General Public License
+  15:../../tmk_core/common/action.c **** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  16:../../tmk_core/common/action.c **** */
+  17:../../tmk_core/common/action.c **** #include "host.h"
+  18:../../tmk_core/common/action.c **** #include "keycode.h"
+  19:../../tmk_core/common/action.c **** #include "keyboard.h"
+  20:../../tmk_core/common/action.c **** #include "mousekey.h"
+  21:../../tmk_core/common/action.c **** #include "command.h"
+  22:../../tmk_core/common/action.c **** #include "led.h"
+  23:../../tmk_core/common/action.c **** #include "backlight.h"
+  24:../../tmk_core/common/action.c **** #include "action_layer.h"
+  25:../../tmk_core/common/action.c **** #include "action_tapping.h"
+  26:../../tmk_core/common/action.c **** #include "action_macro.h"
+  27:../../tmk_core/common/action.c **** #include "action_util.h"
+  28:../../tmk_core/common/action.c **** #include "action.h"
+  29:../../tmk_core/common/action.c **** #include "hook.h"
+  30:../../tmk_core/common/action.c **** 
+  31:../../tmk_core/common/action.c **** #ifdef DEBUG_ACTION
+  32:../../tmk_core/common/action.c **** #include "debug.h"
+  33:../../tmk_core/common/action.c **** #else
+  34:../../tmk_core/common/action.c **** #include "nodebug.h"
+  35:../../tmk_core/common/action.c **** #endif
+  36:../../tmk_core/common/action.c **** 
+  37:../../tmk_core/common/action.c **** 
+  38:../../tmk_core/common/action.c **** void action_exec(keyevent_t event)
+  39:../../tmk_core/common/action.c **** {
+  17               		.loc 1 39 0
+  18               		.cfi_startproc
+  19 0000 CF93      		push r28
+  20               	.LCFI0:
+  21               		.cfi_def_cfa_offset 3
+  22               		.cfi_offset 28, -2
+  23 0002 DF93      		push r29
+  24               	.LCFI1:
+  25               		.cfi_def_cfa_offset 4
+  26               		.cfi_offset 29, -3
+  27 0004 CDB7      		in r28,__SP_L__
+  28 0006 DEB7      		in r29,__SP_H__
+  29               	.LCFI2:
+  30               		.cfi_def_cfa_register 28
+  31 0008 2B97      		sbiw r28,11
+  32               	.LCFI3:
+  33               		.cfi_def_cfa_offset 15
+  34 000a 0FB6      		in __tmp_reg__,__SREG__
+  35 000c F894      		cli
+  36 000e DEBF      		out __SP_H__,r29
+  37 0010 0FBE      		out __SREG__,__tmp_reg__
+  38 0012 CDBF      		out __SP_L__,r28
+  39               	/* prologue: function */
+  40               	/* frame size = 11 */
+  41               	/* stack size = 13 */
+  42               	.L__stack_usage = 13
+  43 0014 4F83      		std Y+7,r20
+  44 0016 5887      		std Y+8,r21
+  45 0018 6987      		std Y+9,r22
+  46 001a 7A87      		std Y+10,r23
+  47 001c 8B87      		std Y+11,r24
+  48               	.LVL0:
+  49               	.LBB4:
+  50               	.LBB5:
+  51               		.file 2 "../../tmk_core/common/keyboard.h"
+   1:../../tmk_core/common/keyboard.h **** /*
+   2:../../tmk_core/common/keyboard.h **** Copyright 2011,2012,2013 Jun Wako <wakojun@gmail.com>
+   3:../../tmk_core/common/keyboard.h **** 
+   4:../../tmk_core/common/keyboard.h **** This program is free software: you can redistribute it and/or modify
+   5:../../tmk_core/common/keyboard.h **** it under the terms of the GNU General Public License as published by
+   6:../../tmk_core/common/keyboard.h **** the Free Software Foundation, either version 2 of the License, or
+   7:../../tmk_core/common/keyboard.h **** (at your option) any later version.
+   8:../../tmk_core/common/keyboard.h **** 
+   9:../../tmk_core/common/keyboard.h **** This program is distributed in the hope that it will be useful,
+  10:../../tmk_core/common/keyboard.h **** but WITHOUT ANY WARRANTY; without even the implied warranty of
+  11:../../tmk_core/common/keyboard.h **** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  12:../../tmk_core/common/keyboard.h **** GNU General Public License for more details.
+  13:../../tmk_core/common/keyboard.h **** 
+  14:../../tmk_core/common/keyboard.h **** You should have received a copy of the GNU General Public License
+  15:../../tmk_core/common/keyboard.h **** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  16:../../tmk_core/common/keyboard.h **** */
+  17:../../tmk_core/common/keyboard.h **** 
+  18:../../tmk_core/common/keyboard.h **** #ifndef KEYBOARD_H
+  19:../../tmk_core/common/keyboard.h **** #define KEYBOARD_H
+  20:../../tmk_core/common/keyboard.h **** 
+  21:../../tmk_core/common/keyboard.h **** #include <stdbool.h>
+  22:../../tmk_core/common/keyboard.h **** #include <stdint.h>
+  23:../../tmk_core/common/keyboard.h **** 
+  24:../../tmk_core/common/keyboard.h **** 
+  25:../../tmk_core/common/keyboard.h **** #ifdef __cplusplus
+  26:../../tmk_core/common/keyboard.h **** extern "C" {
+  27:../../tmk_core/common/keyboard.h **** #endif
+  28:../../tmk_core/common/keyboard.h **** 
+  29:../../tmk_core/common/keyboard.h **** /* key matrix position */
+  30:../../tmk_core/common/keyboard.h **** typedef struct {
+  31:../../tmk_core/common/keyboard.h ****     uint8_t col;
+  32:../../tmk_core/common/keyboard.h ****     uint8_t row;
+  33:../../tmk_core/common/keyboard.h **** } keypos_t;
+  34:../../tmk_core/common/keyboard.h **** 
+  35:../../tmk_core/common/keyboard.h **** /* key event */
+  36:../../tmk_core/common/keyboard.h **** typedef struct {
+  37:../../tmk_core/common/keyboard.h ****     keypos_t key;
+  38:../../tmk_core/common/keyboard.h ****     bool     pressed;
+  39:../../tmk_core/common/keyboard.h ****     uint16_t time;
+  40:../../tmk_core/common/keyboard.h **** } keyevent_t;
+  41:../../tmk_core/common/keyboard.h **** 
+  42:../../tmk_core/common/keyboard.h **** /* equivalent test of keypos_t */
+  43:../../tmk_core/common/keyboard.h **** #define KEYEQ(keya, keyb)       ((keya).row == (keyb).row && (keya).col == (keyb).col)
+  44:../../tmk_core/common/keyboard.h **** 
+  45:../../tmk_core/common/keyboard.h **** /* Rules for No Event:
+  46:../../tmk_core/common/keyboard.h ****  * 1) (time == 0) to handle (keyevent_t){} as empty event
+  47:../../tmk_core/common/keyboard.h ****  * 2) Matrix(255, 255) to make TICK event available
+  48:../../tmk_core/common/keyboard.h ****  */
+  49:../../tmk_core/common/keyboard.h **** static inline bool IS_NOEVENT(keyevent_t event) { return event.time == 0 || (event.key.row == 255 &
+  52               		.loc 2 49 0
+  53 001e 8A85      		ldd r24,Y+10
+  54 0020 9B85      		ldd r25,Y+11
+  55 0022 892B      		or r24,r25
+  56 0024 01F0      		breq .L6
+  57 0026 5F3F      		cpi r21,lo8(-1)
+  58 0028 01F0      		breq .L3
+  59               	.L4:
+  60 002a 80E0      		ldi r24,0
+  61 002c 00C0      		rjmp .L2
+  62               	.LVL1:
+  63               	.L3:
+  64 002e 4F3F      		cpi r20,lo8(-1)
+  65 0030 01F4      		brne .L4
+  66               	.L6:
+  67 0032 81E0      		ldi r24,lo8(1)
+  68               	.LVL2:
+  69               	.L2:
+  70               	.LBE5:
+  71               	.LBE4:
+  40:../../tmk_core/common/action.c ****     if (!IS_NOEVENT(event)) {
+  72               		.loc 1 40 0
+  73 0034 8111      		cpse r24,__zero_reg__
+  74 0036 00C0      		rjmp .L5
+  41:../../tmk_core/common/action.c ****         dprint("\n---- action_exec: start -----\n");
+  42:../../tmk_core/common/action.c ****         dprint("EVENT: "); debug_event(event); dprintln();
+  43:../../tmk_core/common/action.c ****         hook_matrix_change(event);
+  75               		.loc 1 43 0
+  76 0038 4F81      		ldd r20,Y+7
+  77               	.LVL3:
+  78 003a 5885      		ldd r21,Y+8
+  79               	.LVL4:
+  80 003c 6985      		ldd r22,Y+9
+  81 003e 7A85      		ldd r23,Y+10
+  82 0040 8B85      		ldd r24,Y+11
+  83 0042 0E94 0000 		call hook_matrix_change
+  84               	.LVL5:
+  85               	.L5:
+  44:../../tmk_core/common/action.c ****     }
+  45:../../tmk_core/common/action.c **** 
+  46:../../tmk_core/common/action.c ****     keyrecord_t record = { .event = event };
+  86               		.loc 1 46 0
+  87 0046 DE01      		movw r26,r28
+  88 0048 1196      		adiw r26,1
+  89 004a 86E0      		ldi r24,lo8(6)
+  90 004c FD01      		movw r30,r26
+  91               		0:
+  92 004e 1192      		st Z+,__zero_reg__
+  93 0050 8A95      		dec r24
+  94 0052 01F4      		brne 0b
+  95 0054 85E0      		ldi r24,lo8(5)
+  96 0056 FE01      		movw r30,r28
+  97 0058 3796      		adiw r30,7
+  98               		0:
+  99 005a 0190      		ld r0,Z+
+ 100 005c 0D92      		st X+,r0
+ 101 005e 8A95      		dec r24
+ 102 0060 01F4      		brne 0b
+  47:../../tmk_core/common/action.c **** 
+  48:../../tmk_core/common/action.c **** #ifndef NO_ACTION_TAPPING
+  49:../../tmk_core/common/action.c ****     action_tapping_process(record);
+ 103               		.loc 1 49 0
+ 104 0062 4981      		ldd r20,Y+1
+ 105 0064 5A81      		ldd r21,Y+2
+ 106 0066 6B81      		ldd r22,Y+3
+ 107 0068 7C81      		ldd r23,Y+4
+ 108 006a 8D81      		ldd r24,Y+5
+ 109 006c 9E81      		ldd r25,Y+6
+ 110 006e 0E94 0000 		call action_tapping_process
+ 111               	.LVL6:
+ 112               	/* epilogue start */
+  50:../../tmk_core/common/action.c **** #else
+  51:../../tmk_core/common/action.c ****     process_action(&record);
+  52:../../tmk_core/common/action.c ****     if (!IS_NOEVENT(record.event)) {
+  53:../../tmk_core/common/action.c ****         dprint("processed: "); debug_record(record); dprintln();
+  54:../../tmk_core/common/action.c ****     }
+  55:../../tmk_core/common/action.c **** #endif
+  56:../../tmk_core/common/action.c **** }
+ 113               		.loc 1 56 0
+ 114 0072 2B96      		adiw r28,11
+ 115 0074 0FB6      		in __tmp_reg__,__SREG__
+ 116 0076 F894      		cli
+ 117 0078 DEBF      		out __SP_H__,r29
+ 118 007a 0FBE      		out __SREG__,__tmp_reg__
+ 119 007c CDBF      		out __SP_L__,r28
+ 120 007e DF91      		pop r29
+ 121 0080 CF91      		pop r28
+ 122 0082 0895      		ret
+ 123               		.cfi_endproc
+ 124               	.LFE4:
+ 126               		.section	.text.register_code,"ax",@progbits
+ 127               	.global	register_code
+ 129               	register_code:
+ 130               	.LFB6:
+  57:../../tmk_core/common/action.c **** 
+  58:../../tmk_core/common/action.c **** void process_action(keyrecord_t *record)
+  59:../../tmk_core/common/action.c **** {
+  60:../../tmk_core/common/action.c ****     keyevent_t event = record->event;
+  61:../../tmk_core/common/action.c **** #ifndef NO_ACTION_TAPPING
+  62:../../tmk_core/common/action.c ****     uint8_t tap_count = record->tap.count;
+  63:../../tmk_core/common/action.c **** #endif
+  64:../../tmk_core/common/action.c **** 
+  65:../../tmk_core/common/action.c ****     if (IS_NOEVENT(event)) { return; }
+  66:../../tmk_core/common/action.c **** 
+  67:../../tmk_core/common/action.c ****     action_t action = layer_switch_get_action(event.key);
+  68:../../tmk_core/common/action.c ****     dprint("ACTION: "); debug_action(action);
+  69:../../tmk_core/common/action.c **** #ifndef NO_ACTION_LAYER
+  70:../../tmk_core/common/action.c ****     dprint(" layer_state: "); layer_debug();
+  71:../../tmk_core/common/action.c ****     dprint(" default_layer_state: "); default_layer_debug();
+  72:../../tmk_core/common/action.c **** #endif
+  73:../../tmk_core/common/action.c ****     dprintln();
+  74:../../tmk_core/common/action.c **** 
+  75:../../tmk_core/common/action.c ****     switch (action.kind.id) {
+  76:../../tmk_core/common/action.c ****         /* Key and Mods */
+  77:../../tmk_core/common/action.c ****         case ACT_LMODS:
+  78:../../tmk_core/common/action.c ****         case ACT_RMODS:
+  79:../../tmk_core/common/action.c ****             {
+  80:../../tmk_core/common/action.c ****                 uint8_t mods = (action.kind.id == ACT_LMODS) ?  action.key.mods :
+  81:../../tmk_core/common/action.c ****                                                                 action.key.mods<<4;
+  82:../../tmk_core/common/action.c ****                 if (event.pressed) {
+  83:../../tmk_core/common/action.c ****                     if (mods) {
+  84:../../tmk_core/common/action.c ****                         add_weak_mods(mods);
+  85:../../tmk_core/common/action.c ****                         send_keyboard_report();
+  86:../../tmk_core/common/action.c ****                     }
+  87:../../tmk_core/common/action.c ****                     register_code(action.key.code);
+  88:../../tmk_core/common/action.c ****                 } else {
+  89:../../tmk_core/common/action.c ****                     unregister_code(action.key.code);
+  90:../../tmk_core/common/action.c ****                     if (mods) {
+  91:../../tmk_core/common/action.c ****                         del_weak_mods(mods);
+  92:../../tmk_core/common/action.c ****                         send_keyboard_report();
+  93:../../tmk_core/common/action.c ****                     }
+  94:../../tmk_core/common/action.c ****                 }
+  95:../../tmk_core/common/action.c ****             }
+  96:../../tmk_core/common/action.c ****             break;
+  97:../../tmk_core/common/action.c **** #ifndef NO_ACTION_TAPPING
+  98:../../tmk_core/common/action.c ****         case ACT_LMODS_TAP:
+  99:../../tmk_core/common/action.c ****         case ACT_RMODS_TAP:
+ 100:../../tmk_core/common/action.c ****             {
+ 101:../../tmk_core/common/action.c ****                 uint8_t mods = (action.kind.id == ACT_LMODS_TAP) ?  action.key.mods :
+ 102:../../tmk_core/common/action.c ****                                                                     action.key.mods<<4;
+ 103:../../tmk_core/common/action.c ****                 switch (action.layer_tap.code) {
+ 104:../../tmk_core/common/action.c ****     #ifndef NO_ACTION_ONESHOT
+ 105:../../tmk_core/common/action.c ****                     case MODS_ONESHOT:
+ 106:../../tmk_core/common/action.c ****                         // Oneshot modifier
+ 107:../../tmk_core/common/action.c ****                         if (event.pressed) {
+ 108:../../tmk_core/common/action.c ****                             if (tap_count == 0) {
+ 109:../../tmk_core/common/action.c ****                                 register_mods(mods);
+ 110:../../tmk_core/common/action.c ****                             }
+ 111:../../tmk_core/common/action.c ****                             else if (tap_count == 1) {
+ 112:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: Oneshot: start\n");
+ 113:../../tmk_core/common/action.c ****                                 set_oneshot_mods(mods);
+ 114:../../tmk_core/common/action.c ****                             }
+ 115:../../tmk_core/common/action.c ****                             else {
+ 116:../../tmk_core/common/action.c ****                                 register_mods(mods);
+ 117:../../tmk_core/common/action.c ****                             }
+ 118:../../tmk_core/common/action.c ****                         } else {
+ 119:../../tmk_core/common/action.c ****                             if (tap_count == 0) {
+ 120:../../tmk_core/common/action.c ****                                 clear_oneshot_mods();
+ 121:../../tmk_core/common/action.c ****                                 unregister_mods(mods);
+ 122:../../tmk_core/common/action.c ****                             }
+ 123:../../tmk_core/common/action.c ****                             else if (tap_count == 1) {
+ 124:../../tmk_core/common/action.c ****                                 // Retain Oneshot mods
+ 125:../../tmk_core/common/action.c ****                             }
+ 126:../../tmk_core/common/action.c ****                             else {
+ 127:../../tmk_core/common/action.c ****                                 clear_oneshot_mods();
+ 128:../../tmk_core/common/action.c ****                                 unregister_mods(mods);
+ 129:../../tmk_core/common/action.c ****                             }
+ 130:../../tmk_core/common/action.c ****                         }
+ 131:../../tmk_core/common/action.c ****                         break;
+ 132:../../tmk_core/common/action.c ****     #endif
+ 133:../../tmk_core/common/action.c ****                     case MODS_TAP_TOGGLE:
+ 134:../../tmk_core/common/action.c ****                         if (event.pressed) {
+ 135:../../tmk_core/common/action.c ****                             if (tap_count <= TAPPING_TOGGLE) {
+ 136:../../tmk_core/common/action.c ****                                 if (mods & get_mods()) {
+ 137:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP_TOGGLE: toggle mods off\n");
+ 138:../../tmk_core/common/action.c ****                                     unregister_mods(mods);
+ 139:../../tmk_core/common/action.c ****                                 } else {
+ 140:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP_TOGGLE: toggle mods on\n");
+ 141:../../tmk_core/common/action.c ****                                     register_mods(mods);
+ 142:../../tmk_core/common/action.c ****                                 }
+ 143:../../tmk_core/common/action.c ****                             }
+ 144:../../tmk_core/common/action.c ****                         } else {
+ 145:../../tmk_core/common/action.c ****                             if (tap_count < TAPPING_TOGGLE) {
+ 146:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP_TOGGLE: release : unregister_mods\n");
+ 147:../../tmk_core/common/action.c ****                                 unregister_mods(mods);
+ 148:../../tmk_core/common/action.c ****                             }
+ 149:../../tmk_core/common/action.c ****                         }
+ 150:../../tmk_core/common/action.c ****                         break;
+ 151:../../tmk_core/common/action.c ****                     default:
+ 152:../../tmk_core/common/action.c ****                         if (event.pressed) {
+ 153:../../tmk_core/common/action.c ****                             if (tap_count > 0) {
+ 154:../../tmk_core/common/action.c ****                                 if (record->tap.interrupted) {
+ 155:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP: Tap: Cancel: add_mods\n");
+ 156:../../tmk_core/common/action.c ****                                     // ad hoc: set 0 to cancel tap
+ 157:../../tmk_core/common/action.c ****                                     record->tap.count = 0;
+ 158:../../tmk_core/common/action.c ****                                     register_mods(mods);
+ 159:../../tmk_core/common/action.c ****                                 } else {
+ 160:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP: Tap: register_code\n");
+ 161:../../tmk_core/common/action.c ****                                     register_code(action.key.code);
+ 162:../../tmk_core/common/action.c ****                                 }
+ 163:../../tmk_core/common/action.c ****                             } else {
+ 164:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: No tap: add_mods\n");
+ 165:../../tmk_core/common/action.c ****                                 register_mods(mods);
+ 166:../../tmk_core/common/action.c ****                             }
+ 167:../../tmk_core/common/action.c ****                         } else {
+ 168:../../tmk_core/common/action.c ****                             if (tap_count > 0) {
+ 169:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: Tap: unregister_code\n");
+ 170:../../tmk_core/common/action.c ****                                 unregister_code(action.key.code);
+ 171:../../tmk_core/common/action.c ****                             } else {
+ 172:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: No tap: add_mods\n");
+ 173:../../tmk_core/common/action.c ****                                 unregister_mods(mods);
+ 174:../../tmk_core/common/action.c ****                             }
+ 175:../../tmk_core/common/action.c ****                         }
+ 176:../../tmk_core/common/action.c ****                         break;
+ 177:../../tmk_core/common/action.c ****                 }
+ 178:../../tmk_core/common/action.c ****             }
+ 179:../../tmk_core/common/action.c ****             break;
+ 180:../../tmk_core/common/action.c **** #endif
+ 181:../../tmk_core/common/action.c **** #ifdef EXTRAKEY_ENABLE
+ 182:../../tmk_core/common/action.c ****         /* other HID usage */
+ 183:../../tmk_core/common/action.c ****         case ACT_USAGE:
+ 184:../../tmk_core/common/action.c ****             switch (action.usage.page) {
+ 185:../../tmk_core/common/action.c ****                 case PAGE_SYSTEM:
+ 186:../../tmk_core/common/action.c ****                     if (event.pressed) {
+ 187:../../tmk_core/common/action.c ****                         host_system_send(action.usage.code);
+ 188:../../tmk_core/common/action.c ****                     } else {
+ 189:../../tmk_core/common/action.c ****                         host_system_send(0);
+ 190:../../tmk_core/common/action.c ****                     }
+ 191:../../tmk_core/common/action.c ****                     break;
+ 192:../../tmk_core/common/action.c ****                 case PAGE_CONSUMER:
+ 193:../../tmk_core/common/action.c ****                     if (event.pressed) {
+ 194:../../tmk_core/common/action.c ****                         host_consumer_send(action.usage.code);
+ 195:../../tmk_core/common/action.c ****                     } else {
+ 196:../../tmk_core/common/action.c ****                         host_consumer_send(0);
+ 197:../../tmk_core/common/action.c ****                     }
+ 198:../../tmk_core/common/action.c ****                     break;
+ 199:../../tmk_core/common/action.c ****             }
+ 200:../../tmk_core/common/action.c ****             break;
+ 201:../../tmk_core/common/action.c **** #endif
+ 202:../../tmk_core/common/action.c **** #ifdef MOUSEKEY_ENABLE
+ 203:../../tmk_core/common/action.c ****         /* Mouse key */
+ 204:../../tmk_core/common/action.c ****         case ACT_MOUSEKEY:
+ 205:../../tmk_core/common/action.c ****             if (event.pressed) {
+ 206:../../tmk_core/common/action.c ****                 mousekey_on(action.key.code);
+ 207:../../tmk_core/common/action.c ****                 mousekey_send();
+ 208:../../tmk_core/common/action.c ****             } else {
+ 209:../../tmk_core/common/action.c ****                 mousekey_off(action.key.code);
+ 210:../../tmk_core/common/action.c ****                 mousekey_send();
+ 211:../../tmk_core/common/action.c ****             }
+ 212:../../tmk_core/common/action.c ****             break;
+ 213:../../tmk_core/common/action.c **** #endif
+ 214:../../tmk_core/common/action.c **** #ifndef NO_ACTION_LAYER
+ 215:../../tmk_core/common/action.c ****         case ACT_LAYER:
+ 216:../../tmk_core/common/action.c ****             if (action.layer_bitop.on == 0) {
+ 217:../../tmk_core/common/action.c ****                 /* Default Layer Bitwise Operation */
+ 218:../../tmk_core/common/action.c ****                 if (!event.pressed) {
+ 219:../../tmk_core/common/action.c ****                     uint8_t shift = action.layer_bitop.part*4;
+ 220:../../tmk_core/common/action.c ****                     uint32_t bits = ((uint32_t)action.layer_bitop.bits)<<shift;
+ 221:../../tmk_core/common/action.c ****                     uint32_t mask = (action.layer_bitop.xbit) ? ~(((uint32_t)0xf)<<shift) : 0;
+ 222:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 223:../../tmk_core/common/action.c ****                         case OP_BIT_AND: default_layer_and(bits | mask); break;
+ 224:../../tmk_core/common/action.c ****                         case OP_BIT_OR:  default_layer_or(bits | mask);  break;
+ 225:../../tmk_core/common/action.c ****                         case OP_BIT_XOR: default_layer_xor(bits | mask); break;
+ 226:../../tmk_core/common/action.c ****                         case OP_BIT_SET: default_layer_and(mask); default_layer_or(bits); break;
+ 227:../../tmk_core/common/action.c ****                     }
+ 228:../../tmk_core/common/action.c ****                 }
+ 229:../../tmk_core/common/action.c ****             } else {
+ 230:../../tmk_core/common/action.c ****                 /* Layer Bitwise Operation */
+ 231:../../tmk_core/common/action.c ****                 if (event.pressed ? (action.layer_bitop.on & ON_PRESS) :
+ 232:../../tmk_core/common/action.c ****                                     (action.layer_bitop.on & ON_RELEASE)) {
+ 233:../../tmk_core/common/action.c ****                     uint8_t shift = action.layer_bitop.part*4;
+ 234:../../tmk_core/common/action.c ****                     uint32_t bits = ((uint32_t)action.layer_bitop.bits)<<shift;
+ 235:../../tmk_core/common/action.c ****                     uint32_t mask = (action.layer_bitop.xbit) ? ~(((uint32_t)0xf)<<shift) : 0;
+ 236:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 237:../../tmk_core/common/action.c ****                         case OP_BIT_AND: layer_and(bits | mask); break;
+ 238:../../tmk_core/common/action.c ****                         case OP_BIT_OR:  layer_or(bits | mask);  break;
+ 239:../../tmk_core/common/action.c ****                         case OP_BIT_XOR: layer_xor(bits | mask); break;
+ 240:../../tmk_core/common/action.c ****                         case OP_BIT_SET: layer_and(mask); layer_or(bits); break;
+ 241:../../tmk_core/common/action.c ****                     }
+ 242:../../tmk_core/common/action.c ****                 }
+ 243:../../tmk_core/common/action.c ****             }
+ 244:../../tmk_core/common/action.c ****             break;
+ 245:../../tmk_core/common/action.c ****     #ifndef NO_ACTION_TAPPING
+ 246:../../tmk_core/common/action.c ****         case ACT_LAYER_TAP:
+ 247:../../tmk_core/common/action.c ****         case ACT_LAYER_TAP_EXT:
+ 248:../../tmk_core/common/action.c ****             switch (action.layer_tap.code) {
+ 249:../../tmk_core/common/action.c ****                 case 0xe0 ... 0xef:
+ 250:../../tmk_core/common/action.c ****                     /* layer On/Off with modifiers(left only) */
+ 251:../../tmk_core/common/action.c ****                     if (event.pressed) {
+ 252:../../tmk_core/common/action.c ****                         layer_on(action.layer_tap.val);
+ 253:../../tmk_core/common/action.c ****                         register_mods(action.layer_tap.code & 0x0f);
+ 254:../../tmk_core/common/action.c ****                     } else {
+ 255:../../tmk_core/common/action.c ****                         layer_off(action.layer_tap.val);
+ 256:../../tmk_core/common/action.c ****                         unregister_mods(action.layer_tap.code & 0x0f);
+ 257:../../tmk_core/common/action.c ****                     }
+ 258:../../tmk_core/common/action.c ****                     break;
+ 259:../../tmk_core/common/action.c ****                 case OP_TAP_TOGGLE:
+ 260:../../tmk_core/common/action.c ****                     /* tap toggle */
+ 261:../../tmk_core/common/action.c ****                     if (event.pressed) {
+ 262:../../tmk_core/common/action.c ****                         if (tap_count < TAPPING_TOGGLE) {
+ 263:../../tmk_core/common/action.c ****                             layer_invert(action.layer_tap.val);
+ 264:../../tmk_core/common/action.c ****                         }
+ 265:../../tmk_core/common/action.c ****                     } else {
+ 266:../../tmk_core/common/action.c ****                         if (tap_count <= TAPPING_TOGGLE) {
+ 267:../../tmk_core/common/action.c ****                             layer_invert(action.layer_tap.val);
+ 268:../../tmk_core/common/action.c ****                         }
+ 269:../../tmk_core/common/action.c ****                     }
+ 270:../../tmk_core/common/action.c ****                     break;
+ 271:../../tmk_core/common/action.c ****                 case OP_ON_OFF:
+ 272:../../tmk_core/common/action.c ****                     event.pressed ? layer_on(action.layer_tap.val) :
+ 273:../../tmk_core/common/action.c ****                                     layer_off(action.layer_tap.val);
+ 274:../../tmk_core/common/action.c ****                     break;
+ 275:../../tmk_core/common/action.c ****                 case OP_OFF_ON:
+ 276:../../tmk_core/common/action.c ****                     event.pressed ? layer_off(action.layer_tap.val) :
+ 277:../../tmk_core/common/action.c ****                                     layer_on(action.layer_tap.val);
+ 278:../../tmk_core/common/action.c ****                     break;
+ 279:../../tmk_core/common/action.c ****                 case OP_SET_CLEAR:
+ 280:../../tmk_core/common/action.c ****                     event.pressed ? layer_move(action.layer_tap.val) :
+ 281:../../tmk_core/common/action.c ****                                     layer_clear();
+ 282:../../tmk_core/common/action.c ****                     break;
+ 283:../../tmk_core/common/action.c ****                 default:
+ 284:../../tmk_core/common/action.c ****                     /* tap key */
+ 285:../../tmk_core/common/action.c ****                     if (event.pressed) {
+ 286:../../tmk_core/common/action.c ****                         if (tap_count > 0) {
+ 287:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: Tap: register_code\n");
+ 288:../../tmk_core/common/action.c ****                             register_code(action.layer_tap.code);
+ 289:../../tmk_core/common/action.c ****                         } else {
+ 290:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: No tap: On on press\n");
+ 291:../../tmk_core/common/action.c ****                             layer_on(action.layer_tap.val);
+ 292:../../tmk_core/common/action.c ****                         }
+ 293:../../tmk_core/common/action.c ****                     } else {
+ 294:../../tmk_core/common/action.c ****                         if (tap_count > 0) {
+ 295:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: Tap: unregister_code\n");
+ 296:../../tmk_core/common/action.c ****                             unregister_code(action.layer_tap.code);
+ 297:../../tmk_core/common/action.c ****                         } else {
+ 298:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: No tap: Off on release\n");
+ 299:../../tmk_core/common/action.c ****                             layer_off(action.layer_tap.val);
+ 300:../../tmk_core/common/action.c ****                         }
+ 301:../../tmk_core/common/action.c ****                     }
+ 302:../../tmk_core/common/action.c ****                     break;
+ 303:../../tmk_core/common/action.c ****             }
+ 304:../../tmk_core/common/action.c ****             break;
+ 305:../../tmk_core/common/action.c ****     #endif
+ 306:../../tmk_core/common/action.c **** #endif
+ 307:../../tmk_core/common/action.c ****         /* Extentions */
+ 308:../../tmk_core/common/action.c **** #ifndef NO_ACTION_MACRO
+ 309:../../tmk_core/common/action.c ****         case ACT_MACRO:
+ 310:../../tmk_core/common/action.c ****             action_macro_play(action_get_macro(record, action.func.id, action.func.opt));
+ 311:../../tmk_core/common/action.c ****             break;
+ 312:../../tmk_core/common/action.c **** #endif
+ 313:../../tmk_core/common/action.c **** #ifdef BACKLIGHT_ENABLE
+ 314:../../tmk_core/common/action.c ****         case ACT_BACKLIGHT:
+ 315:../../tmk_core/common/action.c ****             if (!event.pressed) {
+ 316:../../tmk_core/common/action.c ****                 switch (action.backlight.opt) {
+ 317:../../tmk_core/common/action.c ****                     case BACKLIGHT_INCREASE:
+ 318:../../tmk_core/common/action.c ****                         backlight_increase();
+ 319:../../tmk_core/common/action.c ****                         break;
+ 320:../../tmk_core/common/action.c ****                     case BACKLIGHT_DECREASE:
+ 321:../../tmk_core/common/action.c ****                         backlight_decrease();
+ 322:../../tmk_core/common/action.c ****                         break;
+ 323:../../tmk_core/common/action.c ****                     case BACKLIGHT_TOGGLE:
+ 324:../../tmk_core/common/action.c ****                         backlight_toggle();
+ 325:../../tmk_core/common/action.c ****                         break;
+ 326:../../tmk_core/common/action.c ****                     case BACKLIGHT_STEP:
+ 327:../../tmk_core/common/action.c ****                         backlight_step();
+ 328:../../tmk_core/common/action.c ****                         break;
+ 329:../../tmk_core/common/action.c ****                     case BACKLIGHT_LEVEL:
+ 330:../../tmk_core/common/action.c ****                         backlight_level(action.backlight.level);
+ 331:../../tmk_core/common/action.c ****                         break;
+ 332:../../tmk_core/common/action.c ****                 }
+ 333:../../tmk_core/common/action.c ****             }
+ 334:../../tmk_core/common/action.c ****             break;
+ 335:../../tmk_core/common/action.c **** #endif
+ 336:../../tmk_core/common/action.c ****         case ACT_COMMAND:
+ 337:../../tmk_core/common/action.c ****             break;
+ 338:../../tmk_core/common/action.c **** #ifndef NO_ACTION_FUNCTION
+ 339:../../tmk_core/common/action.c ****         case ACT_FUNCTION:
+ 340:../../tmk_core/common/action.c ****             action_function(record, action.func.id, action.func.opt);
+ 341:../../tmk_core/common/action.c ****             break;
+ 342:../../tmk_core/common/action.c **** #endif
+ 343:../../tmk_core/common/action.c ****         default:
+ 344:../../tmk_core/common/action.c ****             break;
+ 345:../../tmk_core/common/action.c ****     }
+ 346:../../tmk_core/common/action.c **** }
+ 347:../../tmk_core/common/action.c **** 
+ 348:../../tmk_core/common/action.c **** 
+ 349:../../tmk_core/common/action.c **** 
+ 350:../../tmk_core/common/action.c **** 
+ 351:../../tmk_core/common/action.c **** /*
+ 352:../../tmk_core/common/action.c ****  * Utilities for actions.
+ 353:../../tmk_core/common/action.c ****  */
+ 354:../../tmk_core/common/action.c **** void register_code(uint8_t code)
+ 355:../../tmk_core/common/action.c **** {
+ 131               		.loc 1 355 0
+ 132               		.cfi_startproc
+ 133               	.LVL7:
+ 134 0000 CF93      		push r28
+ 135               	.LCFI4:
+ 136               		.cfi_def_cfa_offset 3
+ 137               		.cfi_offset 28, -2
+ 138               	/* prologue: function */
+ 139               	/* frame size = 0 */
+ 140               	/* stack size = 1 */
+ 141               	.L__stack_usage = 1
+ 142 0002 C82F      		mov r28,r24
+ 356:../../tmk_core/common/action.c ****     if (code == KC_NO) {
+ 143               		.loc 1 356 0
+ 144 0004 8823      		tst r24
+ 145 0006 01F4      		brne .+2
+ 146 0008 00C0      		rjmp .L8
+ 357:../../tmk_core/common/action.c ****         return;
+ 358:../../tmk_core/common/action.c ****     }
+ 359:../../tmk_core/common/action.c **** 
+ 360:../../tmk_core/common/action.c **** #ifdef LOCKING_SUPPORT_ENABLE
+ 361:../../tmk_core/common/action.c ****     else if (KC_LOCKING_CAPS == code) {
+ 147               		.loc 1 361 0
+ 148 000a 8238      		cpi r24,lo8(-126)
+ 149 000c 01F4      		brne .L11
+ 362:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 363:../../tmk_core/common/action.c ****         // Resync: ignore if caps lock already is on
+ 364:../../tmk_core/common/action.c ****         if (host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK)) return;
+ 150               		.loc 1 364 0
+ 151 000e 0E94 0000 		call host_keyboard_leds
+ 152               	.LVL8:
+ 153 0012 81FD      		sbrc r24,1
+ 154 0014 00C0      		rjmp .L8
+ 365:../../tmk_core/common/action.c **** #endif
+ 366:../../tmk_core/common/action.c ****         add_key(KC_CAPSLOCK);
+ 155               		.loc 1 366 0
+ 156 0016 89E3      		ldi r24,lo8(57)
+ 157 0018 0E94 0000 		call add_key
+ 158               	.LVL9:
+ 367:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 159               		.loc 1 367 0
+ 160 001c 0E94 0000 		call send_keyboard_report
+ 161               	.LVL10:
+ 368:../../tmk_core/common/action.c ****         del_key(KC_CAPSLOCK);
+ 162               		.loc 1 368 0
+ 163 0020 89E3      		ldi r24,lo8(57)
+ 164 0022 00C0      		rjmp .L43
+ 165               	.LVL11:
+ 166               	.L11:
+ 369:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 370:../../tmk_core/common/action.c ****     }
+ 371:../../tmk_core/common/action.c **** 
+ 372:../../tmk_core/common/action.c ****     else if (KC_LOCKING_NUM == code) {
+ 167               		.loc 1 372 0
+ 168 0024 8338      		cpi r24,lo8(-125)
+ 169 0026 01F4      		brne .L13
+ 373:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 374:../../tmk_core/common/action.c ****         if (host_keyboard_leds() & (1<<USB_LED_NUM_LOCK)) return;
+ 170               		.loc 1 374 0
+ 171 0028 0E94 0000 		call host_keyboard_leds
+ 172               	.LVL12:
+ 173 002c 80FD      		sbrc r24,0
+ 174 002e 00C0      		rjmp .L8
+ 375:../../tmk_core/common/action.c **** #endif
+ 376:../../tmk_core/common/action.c ****         add_key(KC_NUMLOCK);
+ 175               		.loc 1 376 0
+ 176 0030 83E5      		ldi r24,lo8(83)
+ 177 0032 0E94 0000 		call add_key
+ 178               	.LVL13:
+ 377:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 179               		.loc 1 377 0
+ 180 0036 0E94 0000 		call send_keyboard_report
+ 181               	.LVL14:
+ 378:../../tmk_core/common/action.c ****         del_key(KC_NUMLOCK);
+ 182               		.loc 1 378 0
+ 183 003a 83E5      		ldi r24,lo8(83)
+ 184               	.L43:
+ 185 003c 0E94 0000 		call del_key
+ 186               	.LVL15:
+ 187               	.L44:
+ 188               	/* epilogue start */
+ 379:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 380:../../tmk_core/common/action.c ****     }
+ 381:../../tmk_core/common/action.c **** 
+ 382:../../tmk_core/common/action.c ****     else if (KC_LOCKING_SCROLL == code) {
+ 383:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 384:../../tmk_core/common/action.c ****         if (host_keyboard_leds() & (1<<USB_LED_SCROLL_LOCK)) return;
+ 385:../../tmk_core/common/action.c **** #endif
+ 386:../../tmk_core/common/action.c ****         add_key(KC_SCROLLLOCK);
+ 387:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 388:../../tmk_core/common/action.c ****         del_key(KC_SCROLLLOCK);
+ 389:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 390:../../tmk_core/common/action.c ****     }
+ 391:../../tmk_core/common/action.c **** #endif
+ 392:../../tmk_core/common/action.c **** 
+ 393:../../tmk_core/common/action.c ****     else if IS_KEY(code) {
+ 394:../../tmk_core/common/action.c ****         // TODO: should push command_proc out of this block?
+ 395:../../tmk_core/common/action.c ****         if (command_proc(code)) return;
+ 396:../../tmk_core/common/action.c **** 
+ 397:../../tmk_core/common/action.c **** #ifndef NO_ACTION_ONESHOT
+ 398:../../tmk_core/common/action.c **** /* TODO: remove
+ 399:../../tmk_core/common/action.c ****         if (oneshot_state.mods && !oneshot_state.disabled) {
+ 400:../../tmk_core/common/action.c ****             uint8_t tmp_mods = get_mods();
+ 401:../../tmk_core/common/action.c ****             add_mods(oneshot_state.mods);
+ 402:../../tmk_core/common/action.c **** 
+ 403:../../tmk_core/common/action.c ****             add_key(code);
+ 404:../../tmk_core/common/action.c ****             send_keyboard_report();
+ 405:../../tmk_core/common/action.c **** 
+ 406:../../tmk_core/common/action.c ****             set_mods(tmp_mods);
+ 407:../../tmk_core/common/action.c ****             send_keyboard_report();
+ 408:../../tmk_core/common/action.c ****             oneshot_cancel();
+ 409:../../tmk_core/common/action.c ****         } else 
+ 410:../../tmk_core/common/action.c **** */
+ 411:../../tmk_core/common/action.c **** #endif
+ 412:../../tmk_core/common/action.c ****         {
+ 413:../../tmk_core/common/action.c ****             add_key(code);
+ 414:../../tmk_core/common/action.c ****             send_keyboard_report();
+ 415:../../tmk_core/common/action.c ****         }
+ 416:../../tmk_core/common/action.c ****     }
+ 417:../../tmk_core/common/action.c ****     else if IS_MOD(code) {
+ 418:../../tmk_core/common/action.c ****         add_mods(MOD_BIT(code));
+ 419:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 420:../../tmk_core/common/action.c ****     }
+ 421:../../tmk_core/common/action.c ****     else if IS_SYSTEM(code) {
+ 422:../../tmk_core/common/action.c ****         host_system_send(KEYCODE2SYSTEM(code));
+ 423:../../tmk_core/common/action.c ****     }
+ 424:../../tmk_core/common/action.c ****     else if IS_CONSUMER(code) {
+ 425:../../tmk_core/common/action.c ****         host_consumer_send(KEYCODE2CONSUMER(code));
+ 426:../../tmk_core/common/action.c ****     }
+ 427:../../tmk_core/common/action.c **** }
+ 189               		.loc 1 427 0
+ 190 0040 CF91      		pop r28
+ 379:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 191               		.loc 1 379 0
+ 192 0042 0C94 0000 		jmp send_keyboard_report
+ 193               	.LVL16:
+ 194               	.L13:
+ 382:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 195               		.loc 1 382 0
+ 196 0046 8438      		cpi r24,lo8(-124)
+ 197 0048 01F4      		brne .L14
+ 384:../../tmk_core/common/action.c **** #endif
+ 198               		.loc 1 384 0
+ 199 004a 0E94 0000 		call host_keyboard_leds
+ 200               	.LVL17:
+ 201 004e 82FD      		sbrc r24,2
+ 202 0050 00C0      		rjmp .L8
+ 386:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 203               		.loc 1 386 0
+ 204 0052 87E4      		ldi r24,lo8(71)
+ 205 0054 0E94 0000 		call add_key
+ 206               	.LVL18:
+ 387:../../tmk_core/common/action.c ****         del_key(KC_SCROLLLOCK);
+ 207               		.loc 1 387 0
+ 208 0058 0E94 0000 		call send_keyboard_report
+ 209               	.LVL19:
+ 388:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 210               		.loc 1 388 0
+ 211 005c 87E4      		ldi r24,lo8(71)
+ 212 005e 00C0      		rjmp .L43
+ 213               	.LVL20:
+ 214               	.L14:
+ 393:../../tmk_core/common/action.c ****         // TODO: should push command_proc out of this block?
+ 215               		.loc 1 393 0
+ 216 0060 8CEF      		ldi r24,lo8(-4)
+ 217               	.LVL21:
+ 218 0062 8C0F      		add r24,r28
+ 219 0064 813A      		cpi r24,lo8(-95)
+ 220 0066 00F4      		brsh .L15
+ 395:../../tmk_core/common/action.c **** 
+ 221               		.loc 1 395 0
+ 222 0068 8C2F      		mov r24,r28
+ 223 006a 0E94 0000 		call command_proc
+ 224               	.LVL22:
+ 225 006e 8111      		cpse r24,__zero_reg__
+ 226 0070 00C0      		rjmp .L8
+ 413:../../tmk_core/common/action.c ****             send_keyboard_report();
+ 227               		.loc 1 413 0
+ 228 0072 8C2F      		mov r24,r28
+ 229 0074 0E94 0000 		call add_key
+ 230               	.LVL23:
+ 231 0078 00C0      		rjmp .L44
+ 232               	.L15:
+ 417:../../tmk_core/common/action.c ****         add_mods(MOD_BIT(code));
+ 233               		.loc 1 417 0
+ 234 007a 80E2      		ldi r24,lo8(32)
+ 235 007c 8C0F      		add r24,r28
+ 236 007e 8830      		cpi r24,lo8(8)
+ 237 0080 00F4      		brsh .L16
+ 418:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 238               		.loc 1 418 0
+ 239 0082 C770      		andi r28,lo8(7)
+ 240               	.LVL24:
+ 241 0084 81E0      		ldi r24,lo8(1)
+ 242 0086 00C0      		rjmp 2f
+ 243               		1:
+ 244 0088 880F      		lsl r24
+ 245               		2:
+ 246 008a CA95      		dec r28
+ 247 008c 02F4      		brpl 1b
+ 248 008e 0E94 0000 		call add_mods
+ 249               	.LVL25:
+ 250 0092 00C0      		rjmp .L44
+ 251               	.LVL26:
+ 252               	.L16:
+ 421:../../tmk_core/common/action.c ****         host_system_send(KEYCODE2SYSTEM(code));
+ 253               		.loc 1 421 0
+ 254 0094 8BE5      		ldi r24,lo8(91)
+ 255 0096 8C0F      		add r24,r28
+ 256 0098 8330      		cpi r24,lo8(3)
+ 257 009a 00F4      		brsh .L17
+ 422:../../tmk_core/common/action.c ****     }
+ 258               		.loc 1 422 0
+ 259 009c C53A      		cpi r28,lo8(-91)
+ 260 009e 01F0      		breq .L20
+ 422:../../tmk_core/common/action.c ****     }
+ 261               		.loc 1 422 0 is_stmt 0 discriminator 1
+ 262 00a0 C63A      		cpi r28,lo8(-90)
+ 263 00a2 01F4      		brne .L21
+ 422:../../tmk_core/common/action.c ****     }
+ 264               		.loc 1 422 0
+ 265 00a4 82E8      		ldi r24,lo8(-126)
+ 266 00a6 90E0      		ldi r25,0
+ 267 00a8 00C0      		rjmp .L18
+ 268               	.L20:
+ 269 00aa 81E8      		ldi r24,lo8(-127)
+ 270 00ac 90E0      		ldi r25,0
+ 271 00ae 00C0      		rjmp .L18
+ 272               	.L21:
+ 273 00b0 83E8      		ldi r24,lo8(-125)
+ 274 00b2 90E0      		ldi r25,0
+ 275               	.L18:
+ 276               	/* epilogue start */
+ 277               		.loc 1 427 0 is_stmt 1 discriminator 4
+ 278 00b4 CF91      		pop r28
+ 279               	.LVL27:
+ 422:../../tmk_core/common/action.c ****     }
+ 280               		.loc 1 422 0 discriminator 4
+ 281 00b6 0C94 0000 		jmp host_system_send
+ 282               	.LVL28:
+ 283               	.L17:
+ 424:../../tmk_core/common/action.c ****         host_consumer_send(KEYCODE2CONSUMER(code));
+ 284               		.loc 1 424 0
+ 285 00ba 88E5      		ldi r24,lo8(88)
+ 286 00bc 8C0F      		add r24,r28
+ 287 00be 8531      		cpi r24,lo8(21)
+ 288 00c0 00F0      		brlo .+2
+ 289 00c2 00C0      		rjmp .L8
+ 425:../../tmk_core/common/action.c ****     }
+ 290               		.loc 1 425 0
+ 291 00c4 C83A      		cpi r28,lo8(-88)
+ 292 00c6 01F0      		breq .L22
+ 425:../../tmk_core/common/action.c ****     }
+ 293               		.loc 1 425 0 is_stmt 0 discriminator 1
+ 294 00c8 C93A      		cpi r28,lo8(-87)
+ 295 00ca 01F0      		breq .L23
+ 425:../../tmk_core/common/action.c ****     }
+ 296               		.loc 1 425 0 discriminator 3
+ 297 00cc CA3A      		cpi r28,lo8(-86)
+ 298 00ce 01F0      		breq .L24
+ 425:../../tmk_core/common/action.c ****     }
+ 299               		.loc 1 425 0 discriminator 5
+ 300 00d0 CB3A      		cpi r28,lo8(-85)
+ 301 00d2 01F0      		breq .L25
+ 425:../../tmk_core/common/action.c ****     }
+ 302               		.loc 1 425 0 discriminator 7
+ 303 00d4 CC3A      		cpi r28,lo8(-84)
+ 304 00d6 01F0      		breq .L26
+ 425:../../tmk_core/common/action.c ****     }
+ 305               		.loc 1 425 0 discriminator 9
+ 306 00d8 CD3A      		cpi r28,lo8(-83)
+ 307 00da 01F0      		breq .L27
+ 425:../../tmk_core/common/action.c ****     }
+ 308               		.loc 1 425 0 discriminator 11
+ 309 00dc CE3A      		cpi r28,lo8(-82)
+ 310 00de 01F0      		breq .L28
+ 425:../../tmk_core/common/action.c ****     }
+ 311               		.loc 1 425 0 discriminator 13
+ 312 00e0 CF3A      		cpi r28,lo8(-81)
+ 313 00e2 01F0      		breq .L29
+ 425:../../tmk_core/common/action.c ****     }
+ 314               		.loc 1 425 0 discriminator 15
+ 315 00e4 C13B      		cpi r28,lo8(-79)
+ 316 00e6 01F0      		breq .L30
+ 425:../../tmk_core/common/action.c ****     }
+ 317               		.loc 1 425 0 discriminator 17
+ 318 00e8 C03B      		cpi r28,lo8(-80)
+ 319 00ea 01F0      		breq .L31
+ 425:../../tmk_core/common/action.c ****     }
+ 320               		.loc 1 425 0 discriminator 19
+ 321 00ec C23B      		cpi r28,lo8(-78)
+ 322 00ee 01F0      		breq .L32
+ 425:../../tmk_core/common/action.c ****     }
+ 323               		.loc 1 425 0 discriminator 21
+ 324 00f0 C33B      		cpi r28,lo8(-77)
+ 325 00f2 01F0      		breq .L33
+ 425:../../tmk_core/common/action.c ****     }
+ 326               		.loc 1 425 0 discriminator 23
+ 327 00f4 C43B      		cpi r28,lo8(-76)
+ 328 00f6 01F0      		breq .L34
+ 425:../../tmk_core/common/action.c ****     }
+ 329               		.loc 1 425 0 discriminator 25
+ 330 00f8 C53B      		cpi r28,lo8(-75)
+ 331 00fa 01F0      		breq .L35
+ 425:../../tmk_core/common/action.c ****     }
+ 332               		.loc 1 425 0 discriminator 27
+ 333 00fc C63B      		cpi r28,lo8(-74)
+ 334 00fe 01F0      		breq .L36
+ 425:../../tmk_core/common/action.c ****     }
+ 335               		.loc 1 425 0 discriminator 29
+ 336 0100 C73B      		cpi r28,lo8(-73)
+ 337 0102 01F0      		breq .L37
+ 425:../../tmk_core/common/action.c ****     }
+ 338               		.loc 1 425 0 discriminator 31
+ 339 0104 C83B      		cpi r28,lo8(-72)
+ 340 0106 01F0      		breq .L38
+ 425:../../tmk_core/common/action.c ****     }
+ 341               		.loc 1 425 0 discriminator 33
+ 342 0108 C93B      		cpi r28,lo8(-71)
+ 343 010a 01F0      		breq .L39
+ 425:../../tmk_core/common/action.c ****     }
+ 344               		.loc 1 425 0 discriminator 35
+ 345 010c CA3B      		cpi r28,lo8(-70)
+ 346 010e 01F0      		breq .L40
+ 425:../../tmk_core/common/action.c ****     }
+ 347               		.loc 1 425 0 discriminator 37
+ 348 0110 CB3B      		cpi r28,lo8(-69)
+ 349 0112 01F0      		breq .L41
+ 425:../../tmk_core/common/action.c ****     }
+ 350               		.loc 1 425 0 discriminator 39
+ 351 0114 CC3B      		cpi r28,lo8(-68)
+ 352 0116 01F0      		breq .+2
+ 353 0118 00C0      		rjmp .L42
+ 425:../../tmk_core/common/action.c ****     }
+ 354               		.loc 1 425 0
+ 355 011a 8AE2      		ldi r24,lo8(42)
+ 356 011c 92E0      		ldi r25,lo8(2)
+ 357 011e 00C0      		rjmp .L19
+ 358               	.L22:
+ 359 0120 82EE      		ldi r24,lo8(-30)
+ 360 0122 90E0      		ldi r25,0
+ 361 0124 00C0      		rjmp .L19
+ 362               	.L23:
+ 363 0126 89EE      		ldi r24,lo8(-23)
+ 364 0128 90E0      		ldi r25,0
+ 365 012a 00C0      		rjmp .L19
+ 366               	.L24:
+ 367 012c 8AEE      		ldi r24,lo8(-22)
+ 368 012e 90E0      		ldi r25,0
+ 369 0130 00C0      		rjmp .L19
+ 370               	.L25:
+ 371 0132 85EB      		ldi r24,lo8(-75)
+ 372 0134 90E0      		ldi r25,0
+ 373 0136 00C0      		rjmp .L19
+ 374               	.L26:
+ 375 0138 86EB      		ldi r24,lo8(-74)
+ 376 013a 90E0      		ldi r25,0
+ 377 013c 00C0      		rjmp .L19
+ 378               	.L27:
+ 379 013e 83EB      		ldi r24,lo8(-77)
+ 380 0140 90E0      		ldi r25,0
+ 381 0142 00C0      		rjmp .L19
+ 382               	.L28:
+ 383 0144 84EB      		ldi r24,lo8(-76)
+ 384 0146 90E0      		ldi r25,0
+ 385 0148 00C0      		rjmp .L19
+ 386               	.L29:
+ 387 014a 87EB      		ldi r24,lo8(-73)
+ 388 014c 90E0      		ldi r25,0
+ 389 014e 00C0      		rjmp .L19
+ 390               	.L30:
+ 391 0150 8CEC      		ldi r24,lo8(-52)
+ 392 0152 90E0      		ldi r25,0
+ 393 0154 00C0      		rjmp .L19
+ 394               	.L31:
+ 395 0156 8DEC      		ldi r24,lo8(-51)
+ 396 0158 90E0      		ldi r25,0
+ 397 015a 00C0      		rjmp .L19
+ 398               	.L32:
+ 399 015c 83E8      		ldi r24,lo8(-125)
+ 400 015e 91E0      		ldi r25,lo8(1)
+ 401 0160 00C0      		rjmp .L19
+ 402               	.L33:
+ 403 0162 8AE8      		ldi r24,lo8(-118)
+ 404 0164 91E0      		ldi r25,lo8(1)
+ 405 0166 00C0      		rjmp .L19
+ 406               	.L34:
+ 407 0168 82E9      		ldi r24,lo8(-110)
+ 408 016a 91E0      		ldi r25,lo8(1)
+ 409 016c 00C0      		rjmp .L19
+ 410               	.L35:
+ 411 016e 84E9      		ldi r24,lo8(-108)
+ 412 0170 91E0      		ldi r25,lo8(1)
+ 413 0172 00C0      		rjmp .L19
+ 414               	.L36:
+ 415 0174 81E2      		ldi r24,lo8(33)
+ 416 0176 92E0      		ldi r25,lo8(2)
+ 417 0178 00C0      		rjmp .L19
+ 418               	.L37:
+ 419 017a 83E2      		ldi r24,lo8(35)
+ 420 017c 92E0      		ldi r25,lo8(2)
+ 421 017e 00C0      		rjmp .L19
+ 422               	.L38:
+ 423 0180 84E2      		ldi r24,lo8(36)
+ 424 0182 92E0      		ldi r25,lo8(2)
+ 425 0184 00C0      		rjmp .L19
+ 426               	.L39:
+ 427 0186 85E2      		ldi r24,lo8(37)
+ 428 0188 92E0      		ldi r25,lo8(2)
+ 429 018a 00C0      		rjmp .L19
+ 430               	.L40:
+ 431 018c 86E2      		ldi r24,lo8(38)
+ 432 018e 92E0      		ldi r25,lo8(2)
+ 433 0190 00C0      		rjmp .L19
+ 434               	.L41:
+ 435 0192 87E2      		ldi r24,lo8(39)
+ 436 0194 92E0      		ldi r25,lo8(2)
+ 437 0196 00C0      		rjmp .L19
+ 438               	.L42:
+ 439 0198 80E0      		ldi r24,0
+ 440 019a 90E0      		ldi r25,0
+ 441               	.L19:
+ 442               	/* epilogue start */
+ 443               		.loc 1 427 0 is_stmt 1 discriminator 43
+ 444 019c CF91      		pop r28
+ 445               	.LVL29:
+ 425:../../tmk_core/common/action.c ****     }
+ 446               		.loc 1 425 0 discriminator 43
+ 447 019e 0C94 0000 		jmp host_consumer_send
+ 448               	.LVL30:
+ 449               	.L8:
+ 450               	/* epilogue start */
+ 451               		.loc 1 427 0
+ 452 01a2 CF91      		pop r28
+ 453               	.LVL31:
+ 454 01a4 0895      		ret
+ 455               		.cfi_endproc
+ 456               	.LFE6:
+ 458               		.section	.text.unregister_code,"ax",@progbits
+ 459               	.global	unregister_code
+ 461               	unregister_code:
+ 462               	.LFB7:
+ 428:../../tmk_core/common/action.c **** 
+ 429:../../tmk_core/common/action.c **** void unregister_code(uint8_t code)
+ 430:../../tmk_core/common/action.c **** {
+ 463               		.loc 1 430 0
+ 464               		.cfi_startproc
+ 465               	.LVL32:
+ 466               	/* prologue: function */
+ 467               	/* frame size = 0 */
+ 468               	/* stack size = 0 */
+ 469               	.L__stack_usage = 0
+ 431:../../tmk_core/common/action.c ****     if (code == KC_NO) {
+ 470               		.loc 1 431 0
+ 471 0000 8823      		tst r24
+ 472 0002 01F4      		brne .+2
+ 473 0004 00C0      		rjmp .L45
+ 432:../../tmk_core/common/action.c ****         return;
+ 433:../../tmk_core/common/action.c ****     }
+ 434:../../tmk_core/common/action.c **** 
+ 435:../../tmk_core/common/action.c **** #ifdef LOCKING_SUPPORT_ENABLE
+ 436:../../tmk_core/common/action.c ****     else if (KC_LOCKING_CAPS == code) {
+ 474               		.loc 1 436 0
+ 475 0006 8238      		cpi r24,lo8(-126)
+ 476 0008 01F4      		brne .L48
+ 437:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 438:../../tmk_core/common/action.c ****         // Resync: ignore if caps lock already is off
+ 439:../../tmk_core/common/action.c ****         if (!(host_keyboard_leds() & (1<<USB_LED_CAPS_LOCK))) return;
+ 477               		.loc 1 439 0
+ 478 000a 0E94 0000 		call host_keyboard_leds
+ 479               	.LVL33:
+ 480 000e 81FF      		sbrs r24,1
+ 481 0010 00C0      		rjmp .L45
+ 440:../../tmk_core/common/action.c **** #endif
+ 441:../../tmk_core/common/action.c ****         add_key(KC_CAPSLOCK);
+ 482               		.loc 1 441 0
+ 483 0012 89E3      		ldi r24,lo8(57)
+ 484 0014 0E94 0000 		call add_key
+ 485               	.LVL34:
+ 442:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 486               		.loc 1 442 0
+ 487 0018 0E94 0000 		call send_keyboard_report
+ 488               	.LVL35:
+ 443:../../tmk_core/common/action.c ****         del_key(KC_CAPSLOCK);
+ 489               		.loc 1 443 0
+ 490 001c 89E3      		ldi r24,lo8(57)
+ 491 001e 00C0      		rjmp .L64
+ 492               	.LVL36:
+ 493               	.L48:
+ 444:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 445:../../tmk_core/common/action.c ****     }
+ 446:../../tmk_core/common/action.c **** 
+ 447:../../tmk_core/common/action.c ****     else if (KC_LOCKING_NUM == code) {
+ 494               		.loc 1 447 0
+ 495 0020 8338      		cpi r24,lo8(-125)
+ 496 0022 01F4      		brne .L50
+ 448:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 449:../../tmk_core/common/action.c ****         if (!(host_keyboard_leds() & (1<<USB_LED_NUM_LOCK))) return;
+ 497               		.loc 1 449 0
+ 498 0024 0E94 0000 		call host_keyboard_leds
+ 499               	.LVL37:
+ 500 0028 80FF      		sbrs r24,0
+ 501 002a 00C0      		rjmp .L45
+ 450:../../tmk_core/common/action.c **** #endif
+ 451:../../tmk_core/common/action.c ****         add_key(KC_NUMLOCK);
+ 502               		.loc 1 451 0
+ 503 002c 83E5      		ldi r24,lo8(83)
+ 504 002e 0E94 0000 		call add_key
+ 505               	.LVL38:
+ 452:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 506               		.loc 1 452 0
+ 507 0032 0E94 0000 		call send_keyboard_report
+ 508               	.LVL39:
+ 453:../../tmk_core/common/action.c ****         del_key(KC_NUMLOCK);
+ 509               		.loc 1 453 0
+ 510 0036 83E5      		ldi r24,lo8(83)
+ 511               	.L64:
+ 512 0038 0E94 0000 		call del_key
+ 513               	.LVL40:
+ 514               	.L65:
+ 454:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 515               		.loc 1 454 0
+ 516 003c 0C94 0000 		jmp send_keyboard_report
+ 517               	.LVL41:
+ 518               	.L50:
+ 455:../../tmk_core/common/action.c ****     }
+ 456:../../tmk_core/common/action.c **** 
+ 457:../../tmk_core/common/action.c ****     else if (KC_LOCKING_SCROLL == code) {
+ 519               		.loc 1 457 0
+ 520 0040 8438      		cpi r24,lo8(-124)
+ 521 0042 01F4      		brne .L51
+ 458:../../tmk_core/common/action.c **** #ifdef LOCKING_RESYNC_ENABLE
+ 459:../../tmk_core/common/action.c ****         if (!(host_keyboard_leds() & (1<<USB_LED_SCROLL_LOCK))) return;
+ 522               		.loc 1 459 0
+ 523 0044 0E94 0000 		call host_keyboard_leds
+ 524               	.LVL42:
+ 525 0048 82FF      		sbrs r24,2
+ 526 004a 00C0      		rjmp .L45
+ 460:../../tmk_core/common/action.c **** #endif
+ 461:../../tmk_core/common/action.c ****         add_key(KC_SCROLLLOCK);
+ 527               		.loc 1 461 0
+ 528 004c 87E4      		ldi r24,lo8(71)
+ 529 004e 0E94 0000 		call add_key
+ 530               	.LVL43:
+ 462:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 531               		.loc 1 462 0
+ 532 0052 0E94 0000 		call send_keyboard_report
+ 533               	.LVL44:
+ 463:../../tmk_core/common/action.c ****         del_key(KC_SCROLLLOCK);
+ 534               		.loc 1 463 0
+ 535 0056 87E4      		ldi r24,lo8(71)
+ 536 0058 00C0      		rjmp .L64
+ 537               	.LVL45:
+ 538               	.L51:
+ 464:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 465:../../tmk_core/common/action.c ****     }
+ 466:../../tmk_core/common/action.c **** #endif
+ 467:../../tmk_core/common/action.c **** 
+ 468:../../tmk_core/common/action.c ****     else if IS_KEY(code) {
+ 539               		.loc 1 468 0
+ 540 005a 9CEF      		ldi r25,lo8(-4)
+ 541 005c 980F      		add r25,r24
+ 542 005e 913A      		cpi r25,lo8(-95)
+ 543 0060 00F0      		brlo .L64
+ 469:../../tmk_core/common/action.c ****         del_key(code);
+ 470:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 471:../../tmk_core/common/action.c ****     }
+ 472:../../tmk_core/common/action.c ****     else if IS_MOD(code) {
+ 544               		.loc 1 472 0
+ 545 0062 90E2      		ldi r25,lo8(32)
+ 546 0064 980F      		add r25,r24
+ 547 0066 9830      		cpi r25,lo8(8)
+ 548 0068 00F4      		brsh .L53
+ 473:../../tmk_core/common/action.c ****         del_mods(MOD_BIT(code));
+ 549               		.loc 1 473 0
+ 550 006a 8770      		andi r24,lo8(7)
+ 551               	.LVL46:
+ 552 006c 91E0      		ldi r25,lo8(1)
+ 553 006e 00C0      		rjmp 2f
+ 554               		1:
+ 555 0070 990F      		lsl r25
+ 556               		2:
+ 557 0072 8A95      		dec r24
+ 558 0074 02F4      		brpl 1b
+ 559 0076 892F      		mov r24,r25
+ 560 0078 0E94 0000 		call del_mods
+ 561               	.LVL47:
+ 562 007c 00C0      		rjmp .L65
+ 563               	.LVL48:
+ 564               	.L53:
+ 474:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 475:../../tmk_core/common/action.c ****     }
+ 476:../../tmk_core/common/action.c ****     else if IS_SYSTEM(code) {
+ 565               		.loc 1 476 0
+ 566 007e 9BE5      		ldi r25,lo8(91)
+ 567 0080 980F      		add r25,r24
+ 568 0082 9330      		cpi r25,lo8(3)
+ 569 0084 00F4      		brsh .L54
+ 477:../../tmk_core/common/action.c ****         host_system_send(0);
+ 570               		.loc 1 477 0
+ 571 0086 80E0      		ldi r24,0
+ 572 0088 90E0      		ldi r25,0
+ 573               	.LVL49:
+ 574 008a 0C94 0000 		jmp host_system_send
+ 575               	.LVL50:
+ 576               	.L54:
+ 478:../../tmk_core/common/action.c ****     }
+ 479:../../tmk_core/common/action.c ****     else if IS_CONSUMER(code) {
+ 577               		.loc 1 479 0
+ 578 008e 885A      		subi r24,lo8(-(88))
+ 579               	.LVL51:
+ 580 0090 8531      		cpi r24,lo8(21)
+ 581 0092 00F4      		brsh .L45
+ 480:../../tmk_core/common/action.c ****         host_consumer_send(0);
+ 582               		.loc 1 480 0
+ 583 0094 80E0      		ldi r24,0
+ 584 0096 90E0      		ldi r25,0
+ 585               	.LVL52:
+ 586 0098 0C94 0000 		jmp host_consumer_send
+ 587               	.LVL53:
+ 588               	.L45:
+ 589 009c 0895      		ret
+ 590               		.cfi_endproc
+ 591               	.LFE7:
+ 593               		.section	.text.register_mods,"ax",@progbits
+ 594               	.global	register_mods
+ 596               	register_mods:
+ 597               	.LFB8:
+ 481:../../tmk_core/common/action.c ****     }
+ 482:../../tmk_core/common/action.c **** }
+ 483:../../tmk_core/common/action.c **** 
+ 484:../../tmk_core/common/action.c **** void register_mods(uint8_t mods)
+ 485:../../tmk_core/common/action.c **** {
+ 598               		.loc 1 485 0
+ 599               		.cfi_startproc
+ 600               	.LVL54:
+ 601               	/* prologue: function */
+ 602               	/* frame size = 0 */
+ 603               	/* stack size = 0 */
+ 604               	.L__stack_usage = 0
+ 486:../../tmk_core/common/action.c ****     if (mods) {
+ 605               		.loc 1 486 0
+ 606 0000 8823      		tst r24
+ 607 0002 01F0      		breq .L66
+ 487:../../tmk_core/common/action.c ****         add_mods(mods);
+ 608               		.loc 1 487 0
+ 609 0004 0E94 0000 		call add_mods
+ 610               	.LVL55:
+ 488:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 611               		.loc 1 488 0
+ 612 0008 0C94 0000 		jmp send_keyboard_report
+ 613               	.LVL56:
+ 614               	.L66:
+ 615 000c 0895      		ret
+ 616               		.cfi_endproc
+ 617               	.LFE8:
+ 619               		.section	.text.unregister_mods,"ax",@progbits
+ 620               	.global	unregister_mods
+ 622               	unregister_mods:
+ 623               	.LFB9:
+ 489:../../tmk_core/common/action.c ****     }
+ 490:../../tmk_core/common/action.c **** }
+ 491:../../tmk_core/common/action.c **** 
+ 492:../../tmk_core/common/action.c **** void unregister_mods(uint8_t mods)
+ 493:../../tmk_core/common/action.c **** {
+ 624               		.loc 1 493 0
+ 625               		.cfi_startproc
+ 626               	.LVL57:
+ 627               	/* prologue: function */
+ 628               	/* frame size = 0 */
+ 629               	/* stack size = 0 */
+ 630               	.L__stack_usage = 0
+ 494:../../tmk_core/common/action.c ****     if (mods) {
+ 631               		.loc 1 494 0
+ 632 0000 8823      		tst r24
+ 633 0002 01F0      		breq .L68
+ 495:../../tmk_core/common/action.c ****         del_mods(mods);
+ 634               		.loc 1 495 0
+ 635 0004 0E94 0000 		call del_mods
+ 636               	.LVL58:
+ 496:../../tmk_core/common/action.c ****         send_keyboard_report();
+ 637               		.loc 1 496 0
+ 638 0008 0C94 0000 		jmp send_keyboard_report
+ 639               	.LVL59:
+ 640               	.L68:
+ 641 000c 0895      		ret
+ 642               		.cfi_endproc
+ 643               	.LFE9:
+ 645               		.section	.text.process_action,"ax",@progbits
+ 646               	.global	process_action
+ 648               	process_action:
+ 649               	.LFB5:
+  59:../../tmk_core/common/action.c ****     keyevent_t event = record->event;
+ 650               		.loc 1 59 0
+ 651               		.cfi_startproc
+ 652               	.LVL60:
+ 653 0000 CF92      		push r12
+ 654               	.LCFI5:
+ 655               		.cfi_def_cfa_offset 3
+ 656               		.cfi_offset 12, -2
+ 657 0002 DF92      		push r13
+ 658               	.LCFI6:
+ 659               		.cfi_def_cfa_offset 4
+ 660               		.cfi_offset 13, -3
+ 661 0004 EF92      		push r14
+ 662               	.LCFI7:
+ 663               		.cfi_def_cfa_offset 5
+ 664               		.cfi_offset 14, -4
+ 665 0006 FF92      		push r15
+ 666               	.LCFI8:
+ 667               		.cfi_def_cfa_offset 6
+ 668               		.cfi_offset 15, -5
+ 669 0008 0F93      		push r16
+ 670               	.LCFI9:
+ 671               		.cfi_def_cfa_offset 7
+ 672               		.cfi_offset 16, -6
+ 673 000a 1F93      		push r17
+ 674               	.LCFI10:
+ 675               		.cfi_def_cfa_offset 8
+ 676               		.cfi_offset 17, -7
+ 677 000c CF93      		push r28
+ 678               	.LCFI11:
+ 679               		.cfi_def_cfa_offset 9
+ 680               		.cfi_offset 28, -8
+ 681 000e DF93      		push r29
+ 682               	.LCFI12:
+ 683               		.cfi_def_cfa_offset 10
+ 684               		.cfi_offset 29, -9
+ 685 0010 CDB7      		in r28,__SP_L__
+ 686 0012 DEB7      		in r29,__SP_H__
+ 687               	.LCFI13:
+ 688               		.cfi_def_cfa_register 28
+ 689 0014 2897      		sbiw r28,8
+ 690               	.LCFI14:
+ 691               		.cfi_def_cfa_offset 18
+ 692 0016 0FB6      		in __tmp_reg__,__SREG__
+ 693 0018 F894      		cli
+ 694 001a DEBF      		out __SP_H__,r29
+ 695 001c 0FBE      		out __SREG__,__tmp_reg__
+ 696 001e CDBF      		out __SP_L__,r28
+ 697               	/* prologue: function */
+ 698               	/* frame size = 8 */
+ 699               	/* stack size = 16 */
+ 700               	.L__stack_usage = 16
+ 701 0020 8C01      		movw r16,r24
+  60:../../tmk_core/common/action.c **** #ifndef NO_ACTION_TAPPING
+ 702               		.loc 1 60 0
+ 703 0022 85E0      		ldi r24,lo8(5)
+ 704               	.LVL61:
+ 705 0024 F801      		movw r30,r16
+ 706 0026 DE01      		movw r26,r28
+ 707 0028 1196      		adiw r26,1
+ 708               		0:
+ 709 002a 0190      		ld r0,Z+
+ 710 002c 0D92      		st X+,r0
+ 711 002e 8A95      		dec r24
+ 712 0030 01F4      		brne 0b
+ 713 0032 F801      		movw r30,r16
+ 714 0034 4081      		ld r20,Z
+ 715               	.LVL62:
+ 716 0036 3181      		ldd r19,Z+1
+ 717               	.LVL63:
+ 718 0038 F280      		ldd r15,Z+2
+ 719               	.LVL64:
+  62:../../tmk_core/common/action.c **** #endif
+ 720               		.loc 1 62 0
+ 721 003a 2581      		ldd r18,Z+5
+ 722 003c 2295      		swap r18
+ 723 003e 2F70      		andi r18,lo8(15)
+ 724               	.LVL65:
+ 725               	.LBB12:
+ 726               	.LBB13:
+ 727               		.loc 2 49 0
+ 728 0040 8381      		ldd r24,Z+3
+ 729 0042 9481      		ldd r25,Z+4
+ 730 0044 892B      		or r24,r25
+ 731 0046 01F0      		breq .L138
+ 732 0048 3F3F      		cpi r19,lo8(-1)
+ 733 004a 01F4      		brne .L139
+ 734 004c 81E0      		ldi r24,lo8(1)
+ 735 004e 4F3F      		cpi r20,lo8(-1)
+ 736 0050 01F4      		brne .L139
+ 737 0052 00C0      		rjmp .L71
+ 738               	.LVL66:
+ 739               	.L138:
+ 740 0054 81E0      		ldi r24,lo8(1)
+ 741               	.LVL67:
+ 742 0056 00C0      		rjmp .L71
+ 743               	.L139:
+ 744 0058 80E0      		ldi r24,0
+ 745               	.L71:
+ 746               	.LBE13:
+ 747               	.LBE12:
+  65:../../tmk_core/common/action.c **** 
+ 748               		.loc 1 65 0
+ 749 005a 80FD      		sbrc r24,0
+ 750 005c 00C0      		rjmp .L70
+  67:../../tmk_core/common/action.c ****     dprint("ACTION: "); debug_action(action);
+ 751               		.loc 1 67 0
+ 752 005e 4983      		std Y+1,r20
+ 753 0060 3A83      		std Y+2,r19
+ 754 0062 8981      		ldd r24,Y+1
+ 755 0064 9A81      		ldd r25,Y+2
+ 756 0066 2F83      		std Y+7,r18
+ 757               	.LVL68:
+ 758 0068 0E94 0000 		call layer_switch_get_action
+ 759               	.LVL69:
+  70:../../tmk_core/common/action.c ****     dprint(" default_layer_state: "); default_layer_debug();
+ 760               		.loc 1 70 0
+ 761 006c 9E83      		std Y+6,r25
+ 762 006e 8887      		std Y+8,r24
+ 763 0070 0E94 0000 		call layer_debug
+ 764               	.LVL70:
+  71:../../tmk_core/common/action.c **** #endif
+ 765               		.loc 1 71 0
+ 766 0074 0E94 0000 		call default_layer_debug
+ 767               	.LVL71:
+  75:../../tmk_core/common/action.c ****         /* Key and Mods */
+ 768               		.loc 1 75 0
+ 769 0078 4E81      		ldd r20,Y+6
+ 770 007a E42F      		mov r30,r20
+ 771               	.LVL72:
+ 772 007c E295      		swap r30
+ 773 007e EF70      		andi r30,lo8(15)
+ 774 0080 F0E0      		ldi r31,0
+ 775 0082 E050      		subi r30,lo8(-(gs(.L76)))
+ 776 0084 F040      		sbci r31,hi8(-(gs(.L76)))
+ 777 0086 2F81      		ldd r18,Y+7
+ 778 0088 6885      		ldd r22,Y+8
+ 779 008a 0C94 0000 		jmp __tablejump2__
+ 780               		.section	.progmem.gcc_sw_table.process_action,"a",@progbits
+ 781               		.p2align	1
+ 782               	.L76:
+ 783 0000 0000      		.word gs(.L75)
+ 784 0002 0000      		.word gs(.L75)
+ 785 0004 0000      		.word gs(.L77)
+ 786 0006 0000      		.word gs(.L77)
+ 787 0008 0000      		.word gs(.L78)
+ 788 000a 0000      		.word gs(.L79)
+ 789 000c 0000      		.word gs(.L70)
+ 790 000e 0000      		.word gs(.L70)
+ 791 0010 0000      		.word gs(.L80)
+ 792 0012 0000      		.word gs(.L70)
+ 793 0014 0000      		.word gs(.L81)
+ 794 0016 0000      		.word gs(.L81)
+ 795 0018 0000      		.word gs(.L82)
+ 796 001a 0000      		.word gs(.L70)
+ 797 001c 0000      		.word gs(.L70)
+ 798 001e 0000      		.word gs(.L83)
+ 799               		.section	.text.process_action
+ 800               	.L75:
+ 801               	.LBB14:
+  80:../../tmk_core/common/action.c ****                                                                 action.key.mods<<4;
+ 802               		.loc 1 80 0
+ 803 008e 842F      		mov r24,r20
+ 804 0090 807F      		andi r24,lo8(-16)
+ 805 0092 142F      		mov r17,r20
+ 806 0094 1F70      		andi r17,lo8(15)
+ 807 0096 8823      		tst r24
+ 808 0098 01F0      		breq .L85
+  80:../../tmk_core/common/action.c ****                                                                 action.key.mods<<4;
+ 809               		.loc 1 80 0 is_stmt 0 discriminator 2
+ 810 009a 1295      		swap r17
+ 811 009c 107F      		andi r17,lo8(-16)
+ 812               	.L85:
+ 813               	.LVL73:
+  82:../../tmk_core/common/action.c ****                     if (mods) {
+ 814               		.loc 1 82 0 is_stmt 1 discriminator 3
+ 815 009e FF20      		tst r15
+ 816 00a0 01F0      		breq .L86
+  83:../../tmk_core/common/action.c ****                         add_weak_mods(mods);
+ 817               		.loc 1 83 0
+ 818 00a2 1123      		tst r17
+ 819 00a4 01F4      		brne .+2
+ 820 00a6 00C0      		rjmp .L169
+  84:../../tmk_core/common/action.c ****                         send_keyboard_report();
+ 821               		.loc 1 84 0
+ 822 00a8 812F      		mov r24,r17
+ 823 00aa 6887      		std Y+8,r22
+ 824 00ac 0E94 0000 		call add_weak_mods
+ 825               	.LVL74:
+  85:../../tmk_core/common/action.c ****                     }
+ 826               		.loc 1 85 0
+ 827 00b0 0E94 0000 		call send_keyboard_report
+ 828               	.LVL75:
+ 829 00b4 6885      		ldd r22,Y+8
+ 830 00b6 00C0      		rjmp .L169
+ 831               	.L86:
+ 832               	.LVL76:
+  89:../../tmk_core/common/action.c ****                     if (mods) {
+ 833               		.loc 1 89 0
+ 834 00b8 862F      		mov r24,r22
+ 835 00ba 0E94 0000 		call unregister_code
+ 836               	.LVL77:
+  90:../../tmk_core/common/action.c ****                         del_weak_mods(mods);
+ 837               		.loc 1 90 0
+ 838 00be 1123      		tst r17
+ 839 00c0 01F4      		brne .+2
+ 840 00c2 00C0      		rjmp .L70
+  91:../../tmk_core/common/action.c ****                         send_keyboard_report();
+ 841               		.loc 1 91 0
+ 842 00c4 812F      		mov r24,r17
+ 843 00c6 0E94 0000 		call del_weak_mods
+ 844               	.LVL78:
+ 845               	/* epilogue start */
+ 846               	.LBE14:
+ 346:../../tmk_core/common/action.c **** 
+ 847               		.loc 1 346 0
+ 848 00ca 2896      		adiw r28,8
+ 849 00cc 0FB6      		in __tmp_reg__,__SREG__
+ 850 00ce F894      		cli
+ 851 00d0 DEBF      		out __SP_H__,r29
+ 852 00d2 0FBE      		out __SREG__,__tmp_reg__
+ 853 00d4 CDBF      		out __SP_L__,r28
+ 854 00d6 DF91      		pop r29
+ 855 00d8 CF91      		pop r28
+ 856 00da 1F91      		pop r17
+ 857               	.LVL79:
+ 858 00dc 0F91      		pop r16
+ 859               	.LVL80:
+ 860 00de FF90      		pop r15
+ 861               	.LVL81:
+ 862 00e0 EF90      		pop r14
+ 863 00e2 DF90      		pop r13
+ 864 00e4 CF90      		pop r12
+ 865               	.LBB15:
+  92:../../tmk_core/common/action.c ****                     }
+ 866               		.loc 1 92 0
+ 867 00e6 0C94 0000 		jmp send_keyboard_report
+ 868               	.LVL82:
+ 869               	.L77:
+ 870               	.LBE15:
+ 871               	.LBB16:
+ 101:../../tmk_core/common/action.c ****                                                                     action.key.mods<<4;
+ 872               		.loc 1 101 0
+ 873 00ea 842F      		mov r24,r20
+ 874 00ec 807F      		andi r24,lo8(-16)
+ 875 00ee 942F      		mov r25,r20
+ 876 00f0 9F70      		andi r25,lo8(15)
+ 877 00f2 E92E      		mov r14,r25
+ 878 00f4 8032      		cpi r24,lo8(32)
+ 879 00f6 01F0      		breq .L90
+ 101:../../tmk_core/common/action.c ****                                                                     action.key.mods<<4;
+ 880               		.loc 1 101 0 is_stmt 0 discriminator 2
+ 881 00f8 E294      		swap r14
+ 882 00fa 80EF      		ldi r24,lo8(-16)
+ 883 00fc E822      		and r14,r24
+ 884               	.L90:
+ 885               	.LVL83:
+ 103:../../tmk_core/common/action.c ****     #ifndef NO_ACTION_ONESHOT
+ 886               		.loc 1 103 0 is_stmt 1 discriminator 3
+ 887 00fe 6623      		tst r22
+ 888               	.LVL84:
+ 889 0100 01F0      		breq .L92
+ 890 0102 6130      		cpi r22,lo8(1)
+ 891 0104 01F0      		breq .L93
+ 892 0106 00C0      		rjmp .L177
+ 893               	.L92:
+ 107:../../tmk_core/common/action.c ****                             if (tap_count == 0) {
+ 894               		.loc 1 107 0
+ 895 0108 FF20      		tst r15
+ 896 010a 01F0      		breq .L94
+ 109:../../tmk_core/common/action.c ****                             }
+ 897               		.loc 1 109 0
+ 898 010c 8E2D      		mov r24,r14
+ 108:../../tmk_core/common/action.c ****                                 register_mods(mods);
+ 899               		.loc 1 108 0
+ 900 010e 2223      		tst r18
+ 901 0110 01F0      		breq .L165
+ 111:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: Oneshot: start\n");
+ 902               		.loc 1 111 0
+ 903 0112 2130      		cpi r18,lo8(1)
+ 904 0114 01F4      		brne .L165
+ 905               	/* epilogue start */
+ 906               	.LBE16:
+ 346:../../tmk_core/common/action.c **** 
+ 907               		.loc 1 346 0
+ 908 0116 2896      		adiw r28,8
+ 909 0118 0FB6      		in __tmp_reg__,__SREG__
+ 910 011a F894      		cli
+ 911 011c DEBF      		out __SP_H__,r29
+ 912 011e 0FBE      		out __SREG__,__tmp_reg__
+ 913 0120 CDBF      		out __SP_L__,r28
+ 914 0122 DF91      		pop r29
+ 915 0124 CF91      		pop r28
+ 916 0126 1F91      		pop r17
+ 917 0128 0F91      		pop r16
+ 918               	.LVL85:
+ 919 012a FF90      		pop r15
+ 920               	.LVL86:
+ 921 012c EF90      		pop r14
+ 922               	.LVL87:
+ 923 012e DF90      		pop r13
+ 924 0130 CF90      		pop r12
+ 925               	.LBB17:
+ 113:../../tmk_core/common/action.c ****                             }
+ 926               		.loc 1 113 0
+ 927 0132 0C94 0000 		jmp set_oneshot_mods
+ 928               	.LVL88:
+ 929               	.L94:
+ 119:../../tmk_core/common/action.c ****                                 clear_oneshot_mods();
+ 930               		.loc 1 119 0
+ 931 0136 2223      		tst r18
+ 932 0138 01F0      		breq .L166
+ 123:../../tmk_core/common/action.c ****                                 // Retain Oneshot mods
+ 933               		.loc 1 123 0
+ 934 013a 2130      		cpi r18,lo8(1)
+ 935 013c 01F4      		brne .+2
+ 936 013e 00C0      		rjmp .L70
+ 937               	.L166:
+ 127:../../tmk_core/common/action.c ****                                 unregister_mods(mods);
+ 938               		.loc 1 127 0
+ 939 0140 0E94 0000 		call clear_oneshot_mods
+ 940               	.LVL89:
+ 941 0144 00C0      		rjmp .L104
+ 942               	.LVL90:
+ 943               	.L93:
+ 134:../../tmk_core/common/action.c ****                             if (tap_count <= TAPPING_TOGGLE) {
+ 944               		.loc 1 134 0
+ 945 0146 FF20      		tst r15
+ 946 0148 01F0      		breq .L99
+ 135:../../tmk_core/common/action.c ****                                 if (mods & get_mods()) {
+ 947               		.loc 1 135 0
+ 948 014a 2630      		cpi r18,lo8(6)
+ 949 014c 00F0      		brlo .+2
+ 950 014e 00C0      		rjmp .L70
+ 136:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP_TOGGLE: toggle mods off\n");
+ 951               		.loc 1 136 0
+ 952 0150 0E94 0000 		call get_mods
+ 953               	.LVL91:
+ 954 0154 8E21      		and r24,r14
+ 955 0156 01F0      		breq .L100
+ 956 0158 00C0      		rjmp .L104
+ 957               	.LVL92:
+ 958               	.L177:
+ 152:../../tmk_core/common/action.c ****                             if (tap_count > 0) {
+ 959               		.loc 1 152 0
+ 960 015a FF20      		tst r15
+ 961 015c 01F0      		breq .L101
+ 153:../../tmk_core/common/action.c ****                                 if (record->tap.interrupted) {
+ 962               		.loc 1 153 0
+ 963 015e 2111      		cpse r18,__zero_reg__
+ 964 0160 00C0      		rjmp .L178
+ 965               	.L100:
+ 141:../../tmk_core/common/action.c ****                                 }
+ 966               		.loc 1 141 0
+ 967 0162 8E2D      		mov r24,r14
+ 968               	.LVL93:
+ 969               	.L165:
+ 970               	/* epilogue start */
+ 971               	.LBE17:
+ 346:../../tmk_core/common/action.c **** 
+ 972               		.loc 1 346 0
+ 973 0164 2896      		adiw r28,8
+ 974 0166 0FB6      		in __tmp_reg__,__SREG__
+ 975 0168 F894      		cli
+ 976 016a DEBF      		out __SP_H__,r29
+ 977 016c 0FBE      		out __SREG__,__tmp_reg__
+ 978 016e CDBF      		out __SP_L__,r28
+ 979 0170 DF91      		pop r29
+ 980 0172 CF91      		pop r28
+ 981 0174 1F91      		pop r17
+ 982 0176 0F91      		pop r16
+ 983               	.LVL94:
+ 984 0178 FF90      		pop r15
+ 985               	.LVL95:
+ 986 017a EF90      		pop r14
+ 987 017c DF90      		pop r13
+ 988 017e CF90      		pop r12
+ 989               	.LBB18:
+ 141:../../tmk_core/common/action.c ****                                 }
+ 990               		.loc 1 141 0
+ 991 0180 0C94 0000 		jmp register_mods
+ 992               	.LVL96:
+ 993               	.L99:
+ 145:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP_TOGGLE: release : unregister_mods\n");
+ 994               		.loc 1 145 0
+ 995 0184 2530      		cpi r18,lo8(5)
+ 996 0186 00F0      		brlo .+2
+ 997 0188 00C0      		rjmp .L70
+ 998 018a 00C0      		rjmp .L104
+ 999               	.L178:
+ 154:../../tmk_core/common/action.c ****                                     dprint("MODS_TAP: Tap: Cancel: add_mods\n");
+ 1000               		.loc 1 154 0
+ 1001 018c F801      		movw r30,r16
+ 1002 018e 8581      		ldd r24,Z+5
+ 1003 0190 80FF      		sbrs r24,0
+ 1004 0192 00C0      		rjmp .L169
+ 157:../../tmk_core/common/action.c ****                                     register_mods(mods);
+ 1005               		.loc 1 157 0
+ 1006 0194 8F70      		andi r24,lo8(15)
+ 1007 0196 8583      		std Z+5,r24
+ 1008 0198 00C0      		rjmp .L100
+ 1009               	.L101:
+ 168:../../tmk_core/common/action.c ****                                 dprint("MODS_TAP: Tap: unregister_code\n");
+ 1010               		.loc 1 168 0
+ 1011 019a 2111      		cpse r18,__zero_reg__
+ 1012 019c 00C0      		rjmp .L170
+ 1013               	.L104:
+ 173:../../tmk_core/common/action.c ****                             }
+ 1014               		.loc 1 173 0
+ 1015 019e 8E2D      		mov r24,r14
+ 1016 01a0 00C0      		rjmp .L171
+ 1017               	.LVL97:
+ 1018               	.L78:
+ 1019               	.LBE18:
+ 184:../../tmk_core/common/action.c ****                 case PAGE_SYSTEM:
+ 1020               		.loc 1 184 0
+ 1021 01a2 242F      		mov r18,r20
+ 1022 01a4 2695      		lsr r18
+ 1023 01a6 2695      		lsr r18
+ 1024 01a8 2370      		andi r18,lo8(3)
+ 1025 01aa 30E0      		ldi r19,0
+ 1026 01ac 2115      		cp r18,__zero_reg__
+ 1027 01ae 3105      		cpc r19,__zero_reg__
+ 1028 01b0 01F0      		breq .L105
+ 1029 01b2 2130      		cpi r18,1
+ 1030 01b4 3105      		cpc r19,__zero_reg__
+ 1031 01b6 01F0      		breq .L106
+ 1032 01b8 00C0      		rjmp .L70
+ 1033               	.L105:
+ 186:../../tmk_core/common/action.c ****                         host_system_send(action.usage.code);
+ 1034               		.loc 1 186 0
+ 1035 01ba FF20      		tst r15
+ 1036 01bc 01F0      		breq .L107
+ 1037               	.LVL98:
+ 187:../../tmk_core/common/action.c ****                     } else {
+ 1038               		.loc 1 187 0
+ 1039 01be 862F      		mov r24,r22
+ 1040 01c0 942F      		mov r25,r20
+ 1041 01c2 9370      		andi r25,lo8(3)
+ 1042 01c4 00C0      		rjmp .L172
+ 1043               	.LVL99:
+ 1044               	.L107:
+ 189:../../tmk_core/common/action.c ****                     }
+ 1045               		.loc 1 189 0
+ 1046 01c6 80E0      		ldi r24,0
+ 1047 01c8 90E0      		ldi r25,0
+ 1048               	.LVL100:
+ 1049               	.L172:
+ 1050               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1051               		.loc 1 346 0
+ 1052 01ca 2896      		adiw r28,8
+ 1053 01cc 0FB6      		in __tmp_reg__,__SREG__
+ 1054 01ce F894      		cli
+ 1055 01d0 DEBF      		out __SP_H__,r29
+ 1056 01d2 0FBE      		out __SREG__,__tmp_reg__
+ 1057 01d4 CDBF      		out __SP_L__,r28
+ 1058 01d6 DF91      		pop r29
+ 1059 01d8 CF91      		pop r28
+ 1060 01da 1F91      		pop r17
+ 1061 01dc 0F91      		pop r16
+ 1062               	.LVL101:
+ 1063 01de FF90      		pop r15
+ 1064               	.LVL102:
+ 1065 01e0 EF90      		pop r14
+ 1066 01e2 DF90      		pop r13
+ 1067 01e4 CF90      		pop r12
+ 189:../../tmk_core/common/action.c ****                     }
+ 1068               		.loc 1 189 0
+ 1069 01e6 0C94 0000 		jmp host_system_send
+ 1070               	.LVL103:
+ 1071               	.L106:
+ 193:../../tmk_core/common/action.c ****                         host_consumer_send(action.usage.code);
+ 1072               		.loc 1 193 0
+ 1073 01ea FF20      		tst r15
+ 1074 01ec 01F0      		breq .L108
+ 1075               	.LVL104:
+ 194:../../tmk_core/common/action.c ****                     } else {
+ 1076               		.loc 1 194 0
+ 1077 01ee 862F      		mov r24,r22
+ 1078 01f0 942F      		mov r25,r20
+ 1079 01f2 9370      		andi r25,lo8(3)
+ 1080 01f4 00C0      		rjmp .L174
+ 1081               	.LVL105:
+ 1082               	.L108:
+ 196:../../tmk_core/common/action.c ****                     }
+ 1083               		.loc 1 196 0
+ 1084 01f6 80E0      		ldi r24,0
+ 1085 01f8 90E0      		ldi r25,0
+ 1086               	.LVL106:
+ 1087               	.L174:
+ 1088               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1089               		.loc 1 346 0
+ 1090 01fa 2896      		adiw r28,8
+ 1091 01fc 0FB6      		in __tmp_reg__,__SREG__
+ 1092 01fe F894      		cli
+ 1093 0200 DEBF      		out __SP_H__,r29
+ 1094 0202 0FBE      		out __SREG__,__tmp_reg__
+ 1095 0204 CDBF      		out __SP_L__,r28
+ 1096 0206 DF91      		pop r29
+ 1097 0208 CF91      		pop r28
+ 1098 020a 1F91      		pop r17
+ 1099 020c 0F91      		pop r16
+ 1100               	.LVL107:
+ 1101 020e FF90      		pop r15
+ 1102               	.LVL108:
+ 1103 0210 EF90      		pop r14
+ 1104 0212 DF90      		pop r13
+ 1105 0214 CF90      		pop r12
+ 196:../../tmk_core/common/action.c ****                     }
+ 1106               		.loc 1 196 0
+ 1107 0216 0C94 0000 		jmp host_consumer_send
+ 1108               	.LVL109:
+ 1109               	.L79:
+ 206:../../tmk_core/common/action.c ****                 mousekey_send();
+ 1110               		.loc 1 206 0
+ 1111 021a 862F      		mov r24,r22
+ 205:../../tmk_core/common/action.c ****                 mousekey_on(action.key.code);
+ 1112               		.loc 1 205 0
+ 1113 021c FF20      		tst r15
+ 1114 021e 01F0      		breq .L109
+ 206:../../tmk_core/common/action.c ****                 mousekey_send();
+ 1115               		.loc 1 206 0
+ 1116 0220 0E94 0000 		call mousekey_on
+ 1117               	.LVL110:
+ 1118 0224 00C0      		rjmp .L175
+ 1119               	.LVL111:
+ 1120               	.L109:
+ 209:../../tmk_core/common/action.c ****                 mousekey_send();
+ 1121               		.loc 1 209 0
+ 1122 0226 0E94 0000 		call mousekey_off
+ 1123               	.LVL112:
+ 1124               	.L175:
+ 1125               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1126               		.loc 1 346 0
+ 1127 022a 2896      		adiw r28,8
+ 1128 022c 0FB6      		in __tmp_reg__,__SREG__
+ 1129 022e F894      		cli
+ 1130 0230 DEBF      		out __SP_H__,r29
+ 1131 0232 0FBE      		out __SREG__,__tmp_reg__
+ 1132 0234 CDBF      		out __SP_L__,r28
+ 1133 0236 DF91      		pop r29
+ 1134 0238 CF91      		pop r28
+ 1135 023a 1F91      		pop r17
+ 1136 023c 0F91      		pop r16
+ 1137               	.LVL113:
+ 1138 023e FF90      		pop r15
+ 1139               	.LVL114:
+ 1140 0240 EF90      		pop r14
+ 1141 0242 DF90      		pop r13
+ 1142 0244 CF90      		pop r12
+ 210:../../tmk_core/common/action.c ****             }
+ 1143               		.loc 1 210 0
+ 1144 0246 0C94 0000 		jmp mousekey_send
+ 1145               	.LVL115:
+ 1146               	.L80:
+ 216:../../tmk_core/common/action.c ****                 /* Default Layer Bitwise Operation */
+ 1147               		.loc 1 216 0
+ 1148 024a 842F      		mov r24,r20
+ 1149 024c 8370      		andi r24,lo8(3)
+ 1150 024e 01F0      		breq .+2
+ 1151 0250 00C0      		rjmp .L110
+ 218:../../tmk_core/common/action.c ****                     uint8_t shift = action.layer_bitop.part*4;
+ 1152               		.loc 1 218 0
+ 1153 0252 F110      		cpse r15,__zero_reg__
+ 1154 0254 00C0      		rjmp .L70
+ 1155               	.LVL116:
+ 1156               	.LBB19:
+ 219:../../tmk_core/common/action.c ****                     uint32_t bits = ((uint32_t)action.layer_bitop.bits)<<shift;
+ 1157               		.loc 1 219 0
+ 1158 0256 262F      		mov r18,r22
+ 1159 0258 2295      		swap r18
+ 1160 025a 2695      		lsr r18
+ 1161 025c 2770      		andi r18,lo8(7)
+ 1162 025e 220F      		lsl r18
+ 1163 0260 220F      		lsl r18
+ 220:../../tmk_core/common/action.c ****                     uint32_t mask = (action.layer_bitop.xbit) ? ~(((uint32_t)0xf)<<shift) : 0;
+ 1164               		.loc 1 220 0
+ 1165 0262 862F      		mov r24,r22
+ 1166 0264 8F70      		andi r24,lo8(15)
+ 1167 0266 C82E      		mov r12,r24
+ 1168 0268 D12C      		mov r13,__zero_reg__
+ 1169 026a E12C      		mov r14,__zero_reg__
+ 1170 026c F12C      		mov r15,__zero_reg__
+ 1171 026e 022E      		mov r0,r18
+ 1172 0270 00C0      		rjmp 2f
+ 1173               		1:
+ 1174 0272 CC0C      		lsl r12
+ 1175 0274 DD1C      		rol r13
+ 1176 0276 EE1C      		rol r14
+ 1177 0278 FF1C      		rol r15
+ 1178               		2:
+ 1179 027a 0A94      		dec r0
+ 1180 027c 02F4      		brpl 1b
+ 1181               	.LVL117:
+ 221:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1182               		.loc 1 221 0
+ 1183 027e 64FF      		sbrs r22,4
+ 1184 0280 00C0      		rjmp .L140
+ 221:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1185               		.loc 1 221 0 is_stmt 0 discriminator 1
+ 1186 0282 6FE0      		ldi r22,lo8(15)
+ 1187 0284 70E0      		ldi r23,0
+ 1188 0286 80E0      		ldi r24,0
+ 1189 0288 90E0      		ldi r25,0
+ 1190               	.LVL118:
+ 1191 028a 00C0      		rjmp 2f
+ 1192               		1:
+ 1193 028c 660F      		lsl r22
+ 1194 028e 771F      		rol r23
+ 1195 0290 881F      		rol r24
+ 1196 0292 991F      		rol r25
+ 1197               		2:
+ 1198 0294 2A95      		dec r18
+ 1199 0296 02F4      		brpl 1b
+ 1200 0298 6095      		com r22
+ 1201 029a 7095      		com r23
+ 1202 029c 8095      		com r24
+ 1203 029e 9095      		com r25
+ 1204 02a0 00C0      		rjmp .L111
+ 1205               	.LVL119:
+ 1206               	.L140:
+ 221:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1207               		.loc 1 221 0
+ 1208 02a2 60E0      		ldi r22,0
+ 1209 02a4 70E0      		ldi r23,0
+ 1210 02a6 CB01      		movw r24,r22
+ 1211               	.LVL120:
+ 1212               	.L111:
+ 222:../../tmk_core/common/action.c ****                         case OP_BIT_AND: default_layer_and(bits | mask); break;
+ 1213               		.loc 1 222 0 is_stmt 1 discriminator 3
+ 1214 02a8 242F      		mov r18,r20
+ 1215 02aa 2695      		lsr r18
+ 1216 02ac 2695      		lsr r18
+ 1217 02ae 2370      		andi r18,lo8(3)
+ 1218 02b0 422F      		mov r20,r18
+ 1219               	.LVL121:
+ 1220 02b2 50E0      		ldi r21,0
+ 1221 02b4 4230      		cpi r20,2
+ 1222 02b6 5105      		cpc r21,__zero_reg__
+ 1223 02b8 01F0      		breq .L113
+ 1224 02ba 4330      		cpi r20,3
+ 1225 02bc 5105      		cpc r21,__zero_reg__
+ 1226 02be 01F0      		breq .L114
+ 1227 02c0 6C29      		or r22,r12
+ 1228 02c2 7D29      		or r23,r13
+ 1229 02c4 8E29      		or r24,r14
+ 1230 02c6 9F29      		or r25,r15
+ 1231               	.LVL122:
+ 1232 02c8 4130      		cpi r20,1
+ 1233 02ca 5105      		cpc r21,__zero_reg__
+ 1234 02cc 01F0      		breq .L176
+ 1235               	/* epilogue start */
+ 1236               	.LBE19:
+ 346:../../tmk_core/common/action.c **** 
+ 1237               		.loc 1 346 0 discriminator 3
+ 1238 02ce 2896      		adiw r28,8
+ 1239               	.LVL123:
+ 1240 02d0 0FB6      		in __tmp_reg__,__SREG__
+ 1241 02d2 F894      		cli
+ 1242 02d4 DEBF      		out __SP_H__,r29
+ 1243 02d6 0FBE      		out __SREG__,__tmp_reg__
+ 1244 02d8 CDBF      		out __SP_L__,r28
+ 1245 02da DF91      		pop r29
+ 1246 02dc CF91      		pop r28
+ 1247               	.LVL124:
+ 1248 02de 1F91      		pop r17
+ 1249 02e0 0F91      		pop r16
+ 1250               	.LVL125:
+ 1251 02e2 FF90      		pop r15
+ 1252               	.LVL126:
+ 1253 02e4 EF90      		pop r14
+ 1254 02e6 DF90      		pop r13
+ 1255 02e8 CF90      		pop r12
+ 1256               	.LVL127:
+ 1257               	.LBB20:
+ 223:../../tmk_core/common/action.c ****                         case OP_BIT_OR:  default_layer_or(bits | mask);  break;
+ 1258               		.loc 1 223 0 discriminator 3
+ 1259 02ea 0C94 0000 		jmp default_layer_and
+ 1260               	.LVL128:
+ 1261               	.L113:
+ 225:../../tmk_core/common/action.c ****                         case OP_BIT_SET: default_layer_and(mask); default_layer_or(bits); break;
+ 1262               		.loc 1 225 0
+ 1263 02ee 6C29      		or r22,r12
+ 1264 02f0 7D29      		or r23,r13
+ 1265 02f2 8E29      		or r24,r14
+ 1266 02f4 9F29      		or r25,r15
+ 1267               	.LVL129:
+ 1268               	/* epilogue start */
+ 1269               	.LBE20:
+ 346:../../tmk_core/common/action.c **** 
+ 1270               		.loc 1 346 0
+ 1271 02f6 2896      		adiw r28,8
+ 1272               	.LVL130:
+ 1273 02f8 0FB6      		in __tmp_reg__,__SREG__
+ 1274 02fa F894      		cli
+ 1275 02fc DEBF      		out __SP_H__,r29
+ 1276 02fe 0FBE      		out __SREG__,__tmp_reg__
+ 1277 0300 CDBF      		out __SP_L__,r28
+ 1278 0302 DF91      		pop r29
+ 1279 0304 CF91      		pop r28
+ 1280               	.LVL131:
+ 1281 0306 1F91      		pop r17
+ 1282 0308 0F91      		pop r16
+ 1283               	.LVL132:
+ 1284 030a FF90      		pop r15
+ 1285               	.LVL133:
+ 1286 030c EF90      		pop r14
+ 1287 030e DF90      		pop r13
+ 1288 0310 CF90      		pop r12
+ 1289               	.LVL134:
+ 1290               	.LBB21:
+ 225:../../tmk_core/common/action.c ****                         case OP_BIT_SET: default_layer_and(mask); default_layer_or(bits); break;
+ 1291               		.loc 1 225 0
+ 1292 0312 0C94 0000 		jmp default_layer_xor
+ 1293               	.LVL135:
+ 1294               	.L114:
+ 226:../../tmk_core/common/action.c ****                     }
+ 1295               		.loc 1 226 0
+ 1296 0316 0E94 0000 		call default_layer_and
+ 1297               	.LVL136:
+ 1298 031a C701      		movw r24,r14
+ 1299 031c B601      		movw r22,r12
+ 1300               	.L176:
+ 1301               	/* epilogue start */
+ 1302               	.LBE21:
+ 346:../../tmk_core/common/action.c **** 
+ 1303               		.loc 1 346 0
+ 1304 031e 2896      		adiw r28,8
+ 1305 0320 0FB6      		in __tmp_reg__,__SREG__
+ 1306 0322 F894      		cli
+ 1307 0324 DEBF      		out __SP_H__,r29
+ 1308 0326 0FBE      		out __SREG__,__tmp_reg__
+ 1309 0328 CDBF      		out __SP_L__,r28
+ 1310 032a DF91      		pop r29
+ 1311 032c CF91      		pop r28
+ 1312 032e 1F91      		pop r17
+ 1313 0330 0F91      		pop r16
+ 1314               	.LVL137:
+ 1315 0332 FF90      		pop r15
+ 1316               	.LVL138:
+ 1317 0334 EF90      		pop r14
+ 1318 0336 DF90      		pop r13
+ 1319 0338 CF90      		pop r12
+ 1320               	.LVL139:
+ 1321               	.LBB22:
+ 226:../../tmk_core/common/action.c ****                     }
+ 1322               		.loc 1 226 0
+ 1323 033a 0C94 0000 		jmp default_layer_or
+ 1324               	.LVL140:
+ 1325               	.L110:
+ 1326               	.LBE22:
+ 231:../../tmk_core/common/action.c ****                                     (action.layer_bitop.on & ON_RELEASE)) {
+ 1327               		.loc 1 231 0
+ 1328 033e FF20      		tst r15
+ 1329 0340 01F0      		breq .L116
+ 231:../../tmk_core/common/action.c ****                                     (action.layer_bitop.on & ON_RELEASE)) {
+ 1330               		.loc 1 231 0 is_stmt 0 discriminator 1
+ 1331 0342 842F      		mov r24,r20
+ 1332 0344 8170      		andi r24,lo8(1)
+ 1333 0346 00C0      		rjmp .L117
+ 1334               	.L116:
+ 231:../../tmk_core/common/action.c ****                                     (action.layer_bitop.on & ON_RELEASE)) {
+ 1335               		.loc 1 231 0 discriminator 2
+ 1336 0348 8695      		lsr r24
+ 1337               	.L117:
+ 231:../../tmk_core/common/action.c ****                                     (action.layer_bitop.on & ON_RELEASE)) {
+ 1338               		.loc 1 231 0 discriminator 3
+ 1339 034a 8823      		tst r24
+ 1340 034c 01F4      		brne .+2
+ 1341 034e 00C0      		rjmp .L70
+ 1342               	.LVL141:
+ 1343               	.LBB23:
+ 233:../../tmk_core/common/action.c ****                     uint32_t bits = ((uint32_t)action.layer_bitop.bits)<<shift;
+ 1344               		.loc 1 233 0 is_stmt 1
+ 1345 0350 262F      		mov r18,r22
+ 1346 0352 2295      		swap r18
+ 1347 0354 2695      		lsr r18
+ 1348 0356 2770      		andi r18,lo8(7)
+ 1349 0358 220F      		lsl r18
+ 1350 035a 220F      		lsl r18
+ 234:../../tmk_core/common/action.c ****                     uint32_t mask = (action.layer_bitop.xbit) ? ~(((uint32_t)0xf)<<shift) : 0;
+ 1351               		.loc 1 234 0
+ 1352 035c 862F      		mov r24,r22
+ 1353 035e 8F70      		andi r24,lo8(15)
+ 1354 0360 C82E      		mov r12,r24
+ 1355 0362 D12C      		mov r13,__zero_reg__
+ 1356 0364 E12C      		mov r14,__zero_reg__
+ 1357 0366 F12C      		mov r15,__zero_reg__
+ 1358 0368 022E      		mov r0,r18
+ 1359 036a 00C0      		rjmp 2f
+ 1360               		1:
+ 1361 036c CC0C      		lsl r12
+ 1362 036e DD1C      		rol r13
+ 1363 0370 EE1C      		rol r14
+ 1364 0372 FF1C      		rol r15
+ 1365               		2:
+ 1366 0374 0A94      		dec r0
+ 1367 0376 02F4      		brpl 1b
+ 1368               	.LVL142:
+ 235:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1369               		.loc 1 235 0
+ 1370 0378 64FF      		sbrs r22,4
+ 1371 037a 00C0      		rjmp .L141
+ 235:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1372               		.loc 1 235 0 is_stmt 0 discriminator 1
+ 1373 037c 6FE0      		ldi r22,lo8(15)
+ 1374 037e 70E0      		ldi r23,0
+ 1375 0380 80E0      		ldi r24,0
+ 1376 0382 90E0      		ldi r25,0
+ 1377               	.LVL143:
+ 1378 0384 00C0      		rjmp 2f
+ 1379               		1:
+ 1380 0386 660F      		lsl r22
+ 1381 0388 771F      		rol r23
+ 1382 038a 881F      		rol r24
+ 1383 038c 991F      		rol r25
+ 1384               		2:
+ 1385 038e 2A95      		dec r18
+ 1386 0390 02F4      		brpl 1b
+ 1387 0392 6095      		com r22
+ 1388 0394 7095      		com r23
+ 1389 0396 8095      		com r24
+ 1390 0398 9095      		com r25
+ 1391 039a 00C0      		rjmp .L118
+ 1392               	.LVL144:
+ 1393               	.L141:
+ 235:../../tmk_core/common/action.c ****                     switch (action.layer_bitop.op) {
+ 1394               		.loc 1 235 0
+ 1395 039c 60E0      		ldi r22,0
+ 1396 039e 70E0      		ldi r23,0
+ 1397 03a0 CB01      		movw r24,r22
+ 1398               	.LVL145:
+ 1399               	.L118:
+ 236:../../tmk_core/common/action.c ****                         case OP_BIT_AND: layer_and(bits | mask); break;
+ 1400               		.loc 1 236 0 is_stmt 1 discriminator 3
+ 1401 03a2 242F      		mov r18,r20
+ 1402 03a4 2695      		lsr r18
+ 1403 03a6 2695      		lsr r18
+ 1404 03a8 2370      		andi r18,lo8(3)
+ 1405 03aa 422F      		mov r20,r18
+ 1406               	.LVL146:
+ 1407 03ac 50E0      		ldi r21,0
+ 1408 03ae 4230      		cpi r20,2
+ 1409 03b0 5105      		cpc r21,__zero_reg__
+ 1410 03b2 01F0      		breq .L120
+ 1411 03b4 4330      		cpi r20,3
+ 1412 03b6 5105      		cpc r21,__zero_reg__
+ 1413 03b8 01F0      		breq .L121
+ 1414 03ba 6C29      		or r22,r12
+ 1415 03bc 7D29      		or r23,r13
+ 1416 03be 8E29      		or r24,r14
+ 1417 03c0 9F29      		or r25,r15
+ 1418               	.LVL147:
+ 1419 03c2 4130      		cpi r20,1
+ 1420 03c4 5105      		cpc r21,__zero_reg__
+ 1421 03c6 01F0      		breq .L173
+ 1422               	/* epilogue start */
+ 1423               	.LBE23:
+ 346:../../tmk_core/common/action.c **** 
+ 1424               		.loc 1 346 0 discriminator 3
+ 1425 03c8 2896      		adiw r28,8
+ 1426               	.LVL148:
+ 1427 03ca 0FB6      		in __tmp_reg__,__SREG__
+ 1428 03cc F894      		cli
+ 1429 03ce DEBF      		out __SP_H__,r29
+ 1430 03d0 0FBE      		out __SREG__,__tmp_reg__
+ 1431 03d2 CDBF      		out __SP_L__,r28
+ 1432 03d4 DF91      		pop r29
+ 1433 03d6 CF91      		pop r28
+ 1434               	.LVL149:
+ 1435 03d8 1F91      		pop r17
+ 1436 03da 0F91      		pop r16
+ 1437               	.LVL150:
+ 1438 03dc FF90      		pop r15
+ 1439               	.LVL151:
+ 1440 03de EF90      		pop r14
+ 1441 03e0 DF90      		pop r13
+ 1442 03e2 CF90      		pop r12
+ 1443               	.LVL152:
+ 1444               	.LBB24:
+ 237:../../tmk_core/common/action.c ****                         case OP_BIT_OR:  layer_or(bits | mask);  break;
+ 1445               		.loc 1 237 0 discriminator 3
+ 1446 03e4 0C94 0000 		jmp layer_and
+ 1447               	.LVL153:
+ 1448               	.L120:
+ 239:../../tmk_core/common/action.c ****                         case OP_BIT_SET: layer_and(mask); layer_or(bits); break;
+ 1449               		.loc 1 239 0
+ 1450 03e8 6C29      		or r22,r12
+ 1451 03ea 7D29      		or r23,r13
+ 1452 03ec 8E29      		or r24,r14
+ 1453 03ee 9F29      		or r25,r15
+ 1454               	.LVL154:
+ 1455               	/* epilogue start */
+ 1456               	.LBE24:
+ 346:../../tmk_core/common/action.c **** 
+ 1457               		.loc 1 346 0
+ 1458 03f0 2896      		adiw r28,8
+ 1459               	.LVL155:
+ 1460 03f2 0FB6      		in __tmp_reg__,__SREG__
+ 1461 03f4 F894      		cli
+ 1462 03f6 DEBF      		out __SP_H__,r29
+ 1463 03f8 0FBE      		out __SREG__,__tmp_reg__
+ 1464 03fa CDBF      		out __SP_L__,r28
+ 1465 03fc DF91      		pop r29
+ 1466 03fe CF91      		pop r28
+ 1467               	.LVL156:
+ 1468 0400 1F91      		pop r17
+ 1469 0402 0F91      		pop r16
+ 1470               	.LVL157:
+ 1471 0404 FF90      		pop r15
+ 1472               	.LVL158:
+ 1473 0406 EF90      		pop r14
+ 1474 0408 DF90      		pop r13
+ 1475 040a CF90      		pop r12
+ 1476               	.LVL159:
+ 1477               	.LBB25:
+ 239:../../tmk_core/common/action.c ****                         case OP_BIT_SET: layer_and(mask); layer_or(bits); break;
+ 1478               		.loc 1 239 0
+ 1479 040c 0C94 0000 		jmp layer_xor
+ 1480               	.LVL160:
+ 1481               	.L121:
+ 240:../../tmk_core/common/action.c ****                     }
+ 1482               		.loc 1 240 0
+ 1483 0410 0E94 0000 		call layer_and
+ 1484               	.LVL161:
+ 1485 0414 C701      		movw r24,r14
+ 1486 0416 B601      		movw r22,r12
+ 1487               	.L173:
+ 1488               	/* epilogue start */
+ 1489               	.LBE25:
+ 346:../../tmk_core/common/action.c **** 
+ 1490               		.loc 1 346 0
+ 1491 0418 2896      		adiw r28,8
+ 1492 041a 0FB6      		in __tmp_reg__,__SREG__
+ 1493 041c F894      		cli
+ 1494 041e DEBF      		out __SP_H__,r29
+ 1495 0420 0FBE      		out __SREG__,__tmp_reg__
+ 1496 0422 CDBF      		out __SP_L__,r28
+ 1497 0424 DF91      		pop r29
+ 1498 0426 CF91      		pop r28
+ 1499 0428 1F91      		pop r17
+ 1500 042a 0F91      		pop r16
+ 1501               	.LVL162:
+ 1502 042c FF90      		pop r15
+ 1503               	.LVL163:
+ 1504 042e EF90      		pop r14
+ 1505 0430 DF90      		pop r13
+ 1506 0432 CF90      		pop r12
+ 1507               	.LVL164:
+ 1508               	.LBB26:
+ 240:../../tmk_core/common/action.c ****                     }
+ 1509               		.loc 1 240 0
+ 1510 0434 0C94 0000 		jmp layer_or
+ 1511               	.LVL165:
+ 1512               	.L81:
+ 1513               	.LBE26:
+ 248:../../tmk_core/common/action.c ****                 case 0xe0 ... 0xef:
+ 1514               		.loc 1 248 0
+ 1515 0438 603F      		cpi r22,lo8(-16)
+ 1516 043a 01F0      		breq .L124
+ 1517               	.LVL166:
+ 1518 043c 00F4      		brsh .L125
+ 1519 043e 603E      		cpi r22,lo8(-32)
+ 1520 0440 00F4      		brsh .L164
+ 1521 0442 00C0      		rjmp .L123
+ 1522               	.L125:
+ 1523 0444 623F      		cpi r22,lo8(-14)
+ 1524 0446 01F4      		brne .+2
+ 1525 0448 00C0      		rjmp .L127
+ 1526 044a 00F0      		brlo .L128
+ 1527 044c 633F      		cpi r22,lo8(-13)
+ 1528 044e 01F4      		brne .+2
+ 1529 0450 00C0      		rjmp .L129
+ 1530 0452 00C0      		rjmp .L123
+ 1531               	.L164:
+ 1532 0454 162F      		mov r17,r22
+ 1533 0456 1F70      		andi r17,lo8(15)
+ 1534 0458 842F      		mov r24,r20
+ 1535 045a 8F71      		andi r24,lo8(31)
+ 251:../../tmk_core/common/action.c ****                         layer_on(action.layer_tap.val);
+ 1536               		.loc 1 251 0
+ 1537 045c FF20      		tst r15
+ 1538 045e 01F0      		breq .L130
+ 252:../../tmk_core/common/action.c ****                         register_mods(action.layer_tap.code & 0x0f);
+ 1539               		.loc 1 252 0
+ 1540 0460 0E94 0000 		call layer_on
+ 1541               	.LVL167:
+ 253:../../tmk_core/common/action.c ****                     } else {
+ 1542               		.loc 1 253 0
+ 1543 0464 812F      		mov r24,r17
+ 1544 0466 00C0      		rjmp .L165
+ 1545               	.LVL168:
+ 1546               	.L130:
+ 255:../../tmk_core/common/action.c ****                         unregister_mods(action.layer_tap.code & 0x0f);
+ 1547               		.loc 1 255 0
+ 1548 0468 0E94 0000 		call layer_off
+ 1549               	.LVL169:
+ 256:../../tmk_core/common/action.c ****                     }
+ 1550               		.loc 1 256 0
+ 1551 046c 812F      		mov r24,r17
+ 1552               	.LVL170:
+ 1553               	.L171:
+ 1554               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1555               		.loc 1 346 0
+ 1556 046e 2896      		adiw r28,8
+ 1557 0470 0FB6      		in __tmp_reg__,__SREG__
+ 1558 0472 F894      		cli
+ 1559 0474 DEBF      		out __SP_H__,r29
+ 1560 0476 0FBE      		out __SREG__,__tmp_reg__
+ 1561 0478 CDBF      		out __SP_L__,r28
+ 1562 047a DF91      		pop r29
+ 1563 047c CF91      		pop r28
+ 1564 047e 1F91      		pop r17
+ 1565 0480 0F91      		pop r16
+ 1566               	.LVL171:
+ 1567 0482 FF90      		pop r15
+ 1568               	.LVL172:
+ 1569 0484 EF90      		pop r14
+ 1570 0486 DF90      		pop r13
+ 1571 0488 CF90      		pop r12
+ 256:../../tmk_core/common/action.c ****                     }
+ 1572               		.loc 1 256 0
+ 1573 048a 0C94 0000 		jmp unregister_mods
+ 1574               	.LVL173:
+ 1575               	.L124:
+ 261:../../tmk_core/common/action.c ****                         if (tap_count < TAPPING_TOGGLE) {
+ 1576               		.loc 1 261 0
+ 1577 048e FF20      		tst r15
+ 1578 0490 01F0      		breq .L131
+ 262:../../tmk_core/common/action.c ****                             layer_invert(action.layer_tap.val);
+ 1579               		.loc 1 262 0
+ 1580 0492 2530      		cpi r18,lo8(5)
+ 1581 0494 00F0      		brlo .+2
+ 1582 0496 00C0      		rjmp .L70
+ 1583               	.L132:
+ 263:../../tmk_core/common/action.c ****                         }
+ 1584               		.loc 1 263 0
+ 1585 0498 842F      		mov r24,r20
+ 1586 049a 8F71      		andi r24,lo8(31)
+ 1587               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1588               		.loc 1 346 0
+ 1589 049c 2896      		adiw r28,8
+ 1590 049e 0FB6      		in __tmp_reg__,__SREG__
+ 1591 04a0 F894      		cli
+ 1592 04a2 DEBF      		out __SP_H__,r29
+ 1593 04a4 0FBE      		out __SREG__,__tmp_reg__
+ 1594 04a6 CDBF      		out __SP_L__,r28
+ 1595 04a8 DF91      		pop r29
+ 1596 04aa CF91      		pop r28
+ 1597 04ac 1F91      		pop r17
+ 1598 04ae 0F91      		pop r16
+ 1599               	.LVL174:
+ 1600 04b0 FF90      		pop r15
+ 1601               	.LVL175:
+ 1602 04b2 EF90      		pop r14
+ 1603 04b4 DF90      		pop r13
+ 1604 04b6 CF90      		pop r12
+ 263:../../tmk_core/common/action.c ****                         }
+ 1605               		.loc 1 263 0
+ 1606 04b8 0C94 0000 		jmp layer_invert
+ 1607               	.LVL176:
+ 1608               	.L131:
+ 266:../../tmk_core/common/action.c ****                             layer_invert(action.layer_tap.val);
+ 1609               		.loc 1 266 0
+ 1610 04bc 2630      		cpi r18,lo8(6)
+ 1611 04be 00F0      		brlo .+2
+ 1612 04c0 00C0      		rjmp .L70
+ 1613 04c2 00C0      		rjmp .L132
+ 1614               	.L128:
+ 272:../../tmk_core/common/action.c ****                                     layer_off(action.layer_tap.val);
+ 1615               		.loc 1 272 0
+ 1616 04c4 FF20      		tst r15
+ 1617 04c6 01F0      		breq .L133
+ 1618               	.L134:
+ 272:../../tmk_core/common/action.c ****                                     layer_off(action.layer_tap.val);
+ 1619               		.loc 1 272 0 is_stmt 0 discriminator 1
+ 1620 04c8 842F      		mov r24,r20
+ 1621 04ca 8F71      		andi r24,lo8(31)
+ 1622               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1623               		.loc 1 346 0 is_stmt 1 discriminator 1
+ 1624 04cc 2896      		adiw r28,8
+ 1625 04ce 0FB6      		in __tmp_reg__,__SREG__
+ 1626 04d0 F894      		cli
+ 1627 04d2 DEBF      		out __SP_H__,r29
+ 1628 04d4 0FBE      		out __SREG__,__tmp_reg__
+ 1629 04d6 CDBF      		out __SP_L__,r28
+ 1630 04d8 DF91      		pop r29
+ 1631 04da CF91      		pop r28
+ 1632 04dc 1F91      		pop r17
+ 1633 04de 0F91      		pop r16
+ 1634               	.LVL177:
+ 1635 04e0 FF90      		pop r15
+ 1636               	.LVL178:
+ 1637 04e2 EF90      		pop r14
+ 1638 04e4 DF90      		pop r13
+ 1639 04e6 CF90      		pop r12
+ 272:../../tmk_core/common/action.c ****                                     layer_off(action.layer_tap.val);
+ 1640               		.loc 1 272 0 discriminator 1
+ 1641 04e8 0C94 0000 		jmp layer_on
+ 1642               	.LVL179:
+ 1643               	.L127:
+ 276:../../tmk_core/common/action.c ****                                     layer_on(action.layer_tap.val);
+ 1644               		.loc 1 276 0
+ 1645 04ec FF20      		tst r15
+ 1646 04ee 01F0      		breq .L134
+ 1647               	.L133:
+ 273:../../tmk_core/common/action.c ****                     break;
+ 1648               		.loc 1 273 0
+ 1649 04f0 842F      		mov r24,r20
+ 1650 04f2 8F71      		andi r24,lo8(31)
+ 1651               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1652               		.loc 1 346 0
+ 1653 04f4 2896      		adiw r28,8
+ 1654 04f6 0FB6      		in __tmp_reg__,__SREG__
+ 1655 04f8 F894      		cli
+ 1656 04fa DEBF      		out __SP_H__,r29
+ 1657 04fc 0FBE      		out __SREG__,__tmp_reg__
+ 1658 04fe CDBF      		out __SP_L__,r28
+ 1659 0500 DF91      		pop r29
+ 1660 0502 CF91      		pop r28
+ 1661 0504 1F91      		pop r17
+ 1662 0506 0F91      		pop r16
+ 1663               	.LVL180:
+ 1664 0508 FF90      		pop r15
+ 1665               	.LVL181:
+ 1666 050a EF90      		pop r14
+ 1667 050c DF90      		pop r13
+ 1668 050e CF90      		pop r12
+ 273:../../tmk_core/common/action.c ****                     break;
+ 1669               		.loc 1 273 0
+ 1670 0510 0C94 0000 		jmp layer_off
+ 1671               	.LVL182:
+ 1672               	.L129:
+ 280:../../tmk_core/common/action.c ****                                     layer_clear();
+ 1673               		.loc 1 280 0
+ 1674 0514 FF20      		tst r15
+ 1675 0516 01F0      		breq .L135
+ 280:../../tmk_core/common/action.c ****                                     layer_clear();
+ 1676               		.loc 1 280 0 is_stmt 0 discriminator 1
+ 1677 0518 842F      		mov r24,r20
+ 1678 051a 8F71      		andi r24,lo8(31)
+ 1679               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1680               		.loc 1 346 0 is_stmt 1 discriminator 1
+ 1681 051c 2896      		adiw r28,8
+ 1682 051e 0FB6      		in __tmp_reg__,__SREG__
+ 1683 0520 F894      		cli
+ 1684 0522 DEBF      		out __SP_H__,r29
+ 1685 0524 0FBE      		out __SREG__,__tmp_reg__
+ 1686 0526 CDBF      		out __SP_L__,r28
+ 1687 0528 DF91      		pop r29
+ 1688 052a CF91      		pop r28
+ 1689 052c 1F91      		pop r17
+ 1690 052e 0F91      		pop r16
+ 1691               	.LVL183:
+ 1692 0530 FF90      		pop r15
+ 1693               	.LVL184:
+ 1694 0532 EF90      		pop r14
+ 1695 0534 DF90      		pop r13
+ 1696 0536 CF90      		pop r12
+ 280:../../tmk_core/common/action.c ****                                     layer_clear();
+ 1697               		.loc 1 280 0 discriminator 1
+ 1698 0538 0C94 0000 		jmp layer_move
+ 1699               	.LVL185:
+ 1700               	.L135:
+ 1701               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1702               		.loc 1 346 0
+ 1703 053c 2896      		adiw r28,8
+ 1704 053e 0FB6      		in __tmp_reg__,__SREG__
+ 1705 0540 F894      		cli
+ 1706 0542 DEBF      		out __SP_H__,r29
+ 1707 0544 0FBE      		out __SREG__,__tmp_reg__
+ 1708 0546 CDBF      		out __SP_L__,r28
+ 1709 0548 DF91      		pop r29
+ 1710 054a CF91      		pop r28
+ 1711 054c 1F91      		pop r17
+ 1712 054e 0F91      		pop r16
+ 1713               	.LVL186:
+ 1714 0550 FF90      		pop r15
+ 1715               	.LVL187:
+ 1716 0552 EF90      		pop r14
+ 1717 0554 DF90      		pop r13
+ 1718 0556 CF90      		pop r12
+ 281:../../tmk_core/common/action.c ****                     break;
+ 1719               		.loc 1 281 0
+ 1720 0558 0C94 0000 		jmp layer_clear
+ 1721               	.LVL188:
+ 1722               	.L123:
+ 285:../../tmk_core/common/action.c ****                         if (tap_count > 0) {
+ 1723               		.loc 1 285 0
+ 1724 055c FF20      		tst r15
+ 1725 055e 01F0      		breq .L136
+ 286:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: Tap: register_code\n");
+ 1726               		.loc 1 286 0
+ 1727 0560 2223      		tst r18
+ 1728 0562 01F4      		brne .+2
+ 1729 0564 00C0      		rjmp .L134
+ 1730               	.L169:
+ 288:../../tmk_core/common/action.c ****                         } else {
+ 1731               		.loc 1 288 0
+ 1732 0566 862F      		mov r24,r22
+ 1733               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1734               		.loc 1 346 0
+ 1735 0568 2896      		adiw r28,8
+ 1736 056a 0FB6      		in __tmp_reg__,__SREG__
+ 1737 056c F894      		cli
+ 1738 056e DEBF      		out __SP_H__,r29
+ 1739 0570 0FBE      		out __SREG__,__tmp_reg__
+ 1740 0572 CDBF      		out __SP_L__,r28
+ 1741 0574 DF91      		pop r29
+ 1742 0576 CF91      		pop r28
+ 1743 0578 1F91      		pop r17
+ 1744 057a 0F91      		pop r16
+ 1745               	.LVL189:
+ 1746 057c FF90      		pop r15
+ 1747               	.LVL190:
+ 1748 057e EF90      		pop r14
+ 1749 0580 DF90      		pop r13
+ 1750 0582 CF90      		pop r12
+ 288:../../tmk_core/common/action.c ****                         } else {
+ 1751               		.loc 1 288 0
+ 1752 0584 0C94 0000 		jmp register_code
+ 1753               	.LVL191:
+ 1754               	.L136:
+ 294:../../tmk_core/common/action.c ****                             dprint("KEYMAP_TAP_KEY: Tap: unregister_code\n");
+ 1755               		.loc 1 294 0
+ 1756 0588 2223      		tst r18
+ 1757 058a 01F4      		brne .+2
+ 1758 058c 00C0      		rjmp .L133
+ 1759               	.L170:
+ 296:../../tmk_core/common/action.c ****                         } else {
+ 1760               		.loc 1 296 0
+ 1761 058e 862F      		mov r24,r22
+ 1762               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1763               		.loc 1 346 0
+ 1764 0590 2896      		adiw r28,8
+ 1765 0592 0FB6      		in __tmp_reg__,__SREG__
+ 1766 0594 F894      		cli
+ 1767 0596 DEBF      		out __SP_H__,r29
+ 1768 0598 0FBE      		out __SREG__,__tmp_reg__
+ 1769 059a CDBF      		out __SP_L__,r28
+ 1770 059c DF91      		pop r29
+ 1771 059e CF91      		pop r28
+ 1772 05a0 1F91      		pop r17
+ 1773 05a2 0F91      		pop r16
+ 1774               	.LVL192:
+ 1775 05a4 FF90      		pop r15
+ 1776               	.LVL193:
+ 1777 05a6 EF90      		pop r14
+ 1778 05a8 DF90      		pop r13
+ 1779 05aa CF90      		pop r12
+ 296:../../tmk_core/common/action.c ****                         } else {
+ 1780               		.loc 1 296 0
+ 1781 05ac 0C94 0000 		jmp unregister_code
+ 1782               	.LVL194:
+ 1783               	.L82:
+ 310:../../tmk_core/common/action.c ****             break;
+ 1784               		.loc 1 310 0
+ 1785 05b0 4F70      		andi r20,lo8(15)
+ 1786 05b2 C801      		movw r24,r16
+ 1787 05b4 0E94 0000 		call action_get_macro
+ 1788               	.LVL195:
+ 1789               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1790               		.loc 1 346 0
+ 1791 05b8 2896      		adiw r28,8
+ 1792 05ba 0FB6      		in __tmp_reg__,__SREG__
+ 1793 05bc F894      		cli
+ 1794 05be DEBF      		out __SP_H__,r29
+ 1795 05c0 0FBE      		out __SREG__,__tmp_reg__
+ 1796 05c2 CDBF      		out __SP_L__,r28
+ 1797 05c4 DF91      		pop r29
+ 1798 05c6 CF91      		pop r28
+ 1799 05c8 1F91      		pop r17
+ 1800 05ca 0F91      		pop r16
+ 1801               	.LVL196:
+ 1802 05cc FF90      		pop r15
+ 1803               	.LVL197:
+ 1804 05ce EF90      		pop r14
+ 1805 05d0 DF90      		pop r13
+ 1806 05d2 CF90      		pop r12
+ 310:../../tmk_core/common/action.c ****             break;
+ 1807               		.loc 1 310 0
+ 1808 05d4 0C94 0000 		jmp action_macro_play
+ 1809               	.LVL198:
+ 1810               	.L83:
+ 340:../../tmk_core/common/action.c ****             break;
+ 1811               		.loc 1 340 0
+ 1812 05d8 4F70      		andi r20,lo8(15)
+ 1813 05da C801      		movw r24,r16
+ 1814               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1815               		.loc 1 346 0
+ 1816 05dc 2896      		adiw r28,8
+ 1817 05de 0FB6      		in __tmp_reg__,__SREG__
+ 1818 05e0 F894      		cli
+ 1819 05e2 DEBF      		out __SP_H__,r29
+ 1820 05e4 0FBE      		out __SREG__,__tmp_reg__
+ 1821 05e6 CDBF      		out __SP_L__,r28
+ 1822 05e8 DF91      		pop r29
+ 1823 05ea CF91      		pop r28
+ 1824 05ec 1F91      		pop r17
+ 1825 05ee 0F91      		pop r16
+ 1826               	.LVL199:
+ 1827 05f0 FF90      		pop r15
+ 1828               	.LVL200:
+ 1829 05f2 EF90      		pop r14
+ 1830 05f4 DF90      		pop r13
+ 1831 05f6 CF90      		pop r12
+ 340:../../tmk_core/common/action.c ****             break;
+ 1832               		.loc 1 340 0
+ 1833 05f8 0C94 0000 		jmp action_function
+ 1834               	.LVL201:
+ 1835               	.L70:
+ 1836               	/* epilogue start */
+ 346:../../tmk_core/common/action.c **** 
+ 1837               		.loc 1 346 0
+ 1838 05fc 2896      		adiw r28,8
+ 1839 05fe 0FB6      		in __tmp_reg__,__SREG__
+ 1840 0600 F894      		cli
+ 1841 0602 DEBF      		out __SP_H__,r29
+ 1842 0604 0FBE      		out __SREG__,__tmp_reg__
+ 1843 0606 CDBF      		out __SP_L__,r28
+ 1844 0608 DF91      		pop r29
+ 1845 060a CF91      		pop r28
+ 1846 060c 1F91      		pop r17
+ 1847 060e 0F91      		pop r16
+ 1848               	.LVL202:
+ 1849 0610 FF90      		pop r15
+ 1850               	.LVL203:
+ 1851 0612 EF90      		pop r14
+ 1852 0614 DF90      		pop r13
+ 1853 0616 CF90      		pop r12
+ 1854 0618 0895      		ret
+ 1855               		.cfi_endproc
+ 1856               	.LFE5:
+ 1858               		.section	.text.clear_keyboard_but_mods,"ax",@progbits
+ 1859               	.global	clear_keyboard_but_mods
+ 1861               	clear_keyboard_but_mods:
+ 1862               	.LFB11:
+ 497:../../tmk_core/common/action.c ****     }
+ 498:../../tmk_core/common/action.c **** }
+ 499:../../tmk_core/common/action.c **** 
+ 500:../../tmk_core/common/action.c **** void clear_keyboard(void)
+ 501:../../tmk_core/common/action.c **** {
+ 502:../../tmk_core/common/action.c ****     clear_mods();
+ 503:../../tmk_core/common/action.c ****     clear_keyboard_but_mods();
+ 504:../../tmk_core/common/action.c **** }
+ 505:../../tmk_core/common/action.c **** 
+ 506:../../tmk_core/common/action.c **** void clear_keyboard_but_mods(void)
+ 507:../../tmk_core/common/action.c **** {
+ 1863               		.loc 1 507 0
+ 1864               		.cfi_startproc
+ 1865               	/* prologue: function */
+ 1866               	/* frame size = 0 */
+ 1867               	/* stack size = 0 */
+ 1868               	.L__stack_usage = 0
+ 508:../../tmk_core/common/action.c ****     clear_weak_mods();
+ 1869               		.loc 1 508 0
+ 1870 0000 0E94 0000 		call clear_weak_mods
+ 1871               	.LVL204:
+ 509:../../tmk_core/common/action.c ****     clear_keys();
+ 1872               		.loc 1 509 0
+ 1873 0004 0E94 0000 		call clear_keys
+ 1874               	.LVL205:
+ 510:../../tmk_core/common/action.c ****     send_keyboard_report();
+ 1875               		.loc 1 510 0
+ 1876 0008 0E94 0000 		call send_keyboard_report
+ 1877               	.LVL206:
+ 511:../../tmk_core/common/action.c **** #ifdef MOUSEKEY_ENABLE
+ 512:../../tmk_core/common/action.c ****     mousekey_clear();
+ 1878               		.loc 1 512 0
+ 1879 000c 0E94 0000 		call mousekey_clear
+ 1880               	.LVL207:
+ 513:../../tmk_core/common/action.c ****     mousekey_send();
+ 1881               		.loc 1 513 0
+ 1882 0010 0E94 0000 		call mousekey_send
+ 1883               	.LVL208:
+ 514:../../tmk_core/common/action.c **** #endif
+ 515:../../tmk_core/common/action.c **** #ifdef EXTRAKEY_ENABLE
+ 516:../../tmk_core/common/action.c ****     host_system_send(0);
+ 1884               		.loc 1 516 0
+ 1885 0014 80E0      		ldi r24,0
+ 1886 0016 90E0      		ldi r25,0
+ 1887 0018 0E94 0000 		call host_system_send
+ 1888               	.LVL209:
+ 517:../../tmk_core/common/action.c ****     host_consumer_send(0);
+ 1889               		.loc 1 517 0
+ 1890 001c 80E0      		ldi r24,0
+ 1891 001e 90E0      		ldi r25,0
+ 1892 0020 0C94 0000 		jmp host_consumer_send
+ 1893               	.LVL210:
+ 1894               		.cfi_endproc
+ 1895               	.LFE11:
+ 1897               		.section	.text.clear_keyboard,"ax",@progbits
+ 1898               	.global	clear_keyboard
+ 1900               	clear_keyboard:
+ 1901               	.LFB10:
+ 501:../../tmk_core/common/action.c ****     clear_mods();
+ 1902               		.loc 1 501 0
+ 1903               		.cfi_startproc
+ 1904               	/* prologue: function */
+ 1905               	/* frame size = 0 */
+ 1906               	/* stack size = 0 */
+ 1907               	.L__stack_usage = 0
+ 502:../../tmk_core/common/action.c ****     clear_keyboard_but_mods();
+ 1908               		.loc 1 502 0
+ 1909 0000 0E94 0000 		call clear_mods
+ 1910               	.LVL211:
+ 503:../../tmk_core/common/action.c **** }
+ 1911               		.loc 1 503 0
+ 1912 0004 0C94 0000 		jmp clear_keyboard_but_mods
+ 1913               	.LVL212:
+ 1914               		.cfi_endproc
+ 1915               	.LFE10:
+ 1917               		.section	.text.is_tap_key,"ax",@progbits
+ 1918               	.global	is_tap_key
+ 1920               	is_tap_key:
+ 1921               	.LFB12:
+ 518:../../tmk_core/common/action.c **** #endif
+ 519:../../tmk_core/common/action.c **** }
+ 520:../../tmk_core/common/action.c **** 
+ 521:../../tmk_core/common/action.c **** bool is_tap_key(keypos_t key)
+ 522:../../tmk_core/common/action.c **** {
+ 1922               		.loc 1 522 0
+ 1923               		.cfi_startproc
+ 1924               	.LVL213:
+ 1925               	/* prologue: function */
+ 1926               	/* frame size = 0 */
+ 1927               	/* stack size = 0 */
+ 1928               	.L__stack_usage = 0
+ 523:../../tmk_core/common/action.c ****     action_t action = layer_switch_get_action(key);
+ 1929               		.loc 1 523 0
+ 1930 0000 0E94 0000 		call layer_switch_get_action
+ 1931               	.LVL214:
+ 524:../../tmk_core/common/action.c **** 
+ 525:../../tmk_core/common/action.c ****     switch (action.kind.id) {
+ 1932               		.loc 1 525 0
+ 1933 0004 292F      		mov r18,r25
+ 1934 0006 2295      		swap r18
+ 1935 0008 2F70      		andi r18,lo8(15)
+ 1936 000a 30E0      		ldi r19,0
+ 1937 000c 2C30      		cpi r18,12
+ 1938 000e 3105      		cpc r19,__zero_reg__
+ 1939 0010 04F4      		brge .L183
+ 1940 0012 2A30      		cpi r18,10
+ 1941 0014 3105      		cpc r19,__zero_reg__
+ 1942 0016 04F4      		brge .L184
+ 1943 0018 2250      		subi r18,2
+ 1944 001a 3109      		sbc r19,__zero_reg__
+ 1945 001c 2230      		cpi r18,2
+ 1946 001e 3105      		cpc r19,__zero_reg__
+ 1947 0020 00F4      		brsh .L198
+ 1948 0022 00C0      		rjmp .L184
+ 1949               	.L183:
+ 1950 0024 2C30      		cpi r18,12
+ 1951 0026 3105      		cpc r19,__zero_reg__
+ 1952 0028 01F0      		breq .L185
+ 1953 002a 2F30      		cpi r18,15
+ 1954 002c 3105      		cpc r19,__zero_reg__
+ 1955 002e 01F0      		breq .L185
+ 1956 0030 00C0      		rjmp .L198
+ 1957               	.L184:
+ 526:../../tmk_core/common/action.c ****         case ACT_LMODS_TAP:
+ 527:../../tmk_core/common/action.c ****         case ACT_RMODS_TAP:
+ 528:../../tmk_core/common/action.c ****         case ACT_LAYER_TAP:
+ 529:../../tmk_core/common/action.c ****         case ACT_LAYER_TAP_EXT:
+ 530:../../tmk_core/common/action.c ****             switch (action.layer_tap.code) {
+ 1958               		.loc 1 530 0
+ 1959 0032 803E      		cpi r24,lo8(-32)
+ 1960               	.LVL215:
+ 1961 0034 00F0      		brlo .L186
+ 1962 0036 803F      		cpi r24,lo8(-16)
+ 1963 0038 01F4      		brne .L198
+ 1964               	.L186:
+ 531:../../tmk_core/common/action.c ****                 case 0x00 ... 0xdf:
+ 532:../../tmk_core/common/action.c ****                 case OP_TAP_TOGGLE:
+ 533:../../tmk_core/common/action.c ****                     return true;
+ 1965               		.loc 1 533 0
+ 1966 003a 81E0      		ldi r24,lo8(1)
+ 1967               	.LVL216:
+ 1968 003c 0895      		ret
+ 1969               	.L185:
+ 534:../../tmk_core/common/action.c ****             }
+ 535:../../tmk_core/common/action.c ****             return false;
+ 536:../../tmk_core/common/action.c ****         case ACT_MACRO:
+ 537:../../tmk_core/common/action.c ****         case ACT_FUNCTION:
+ 538:../../tmk_core/common/action.c ****             if (action.func.opt & FUNC_TAP) { return true; }
+ 1970               		.loc 1 538 0
+ 1971 003e 93FB      		bst r25,3
+ 1972 0040 8827      		clr r24
+ 1973 0042 80F9      		bld r24,0
+ 1974 0044 0895      		ret
+ 1975               	.LVL217:
+ 1976               	.L198:
+ 535:../../tmk_core/common/action.c ****         case ACT_MACRO:
+ 1977               		.loc 1 535 0
+ 1978 0046 80E0      		ldi r24,0
+ 1979               	.LVL218:
+ 539:../../tmk_core/common/action.c ****             return false;
+ 540:../../tmk_core/common/action.c ****     }
+ 541:../../tmk_core/common/action.c ****     return false;
+ 542:../../tmk_core/common/action.c **** }
+ 1980               		.loc 1 542 0
+ 1981 0048 0895      		ret
+ 1982               		.cfi_endproc
+ 1983               	.LFE12:
+ 1985               		.section	.text.debug_event,"ax",@progbits
+ 1986               	.global	debug_event
+ 1988               	debug_event:
+ 1989               	.LFB13:
+ 543:../../tmk_core/common/action.c **** 
+ 544:../../tmk_core/common/action.c **** 
+ 545:../../tmk_core/common/action.c **** /*
+ 546:../../tmk_core/common/action.c ****  * debug print
+ 547:../../tmk_core/common/action.c ****  */
+ 548:../../tmk_core/common/action.c **** void debug_event(keyevent_t event)
+ 549:../../tmk_core/common/action.c **** {
+ 1990               		.loc 1 549 0
+ 1991               		.cfi_startproc
+ 1992 0000 CF93      		push r28
+ 1993               	.LCFI15:
+ 1994               		.cfi_def_cfa_offset 3
+ 1995               		.cfi_offset 28, -2
+ 1996 0002 DF93      		push r29
+ 1997               	.LCFI16:
+ 1998               		.cfi_def_cfa_offset 4
+ 1999               		.cfi_offset 29, -3
+ 2000 0004 00D0      		rcall .
+ 2001 0006 00D0      		rcall .
+ 2002 0008 1F92      		push __zero_reg__
+ 2003               	.LCFI17:
+ 2004               		.cfi_def_cfa_offset 9
+ 2005 000a CDB7      		in r28,__SP_L__
+ 2006 000c DEB7      		in r29,__SP_H__
+ 2007               	.LCFI18:
+ 2008               		.cfi_def_cfa_register 28
+ 2009               	/* prologue: function */
+ 2010               	/* frame size = 5 */
+ 2011               	/* stack size = 7 */
+ 2012               	.L__stack_usage = 7
+ 2013               	/* epilogue start */
+ 550:../../tmk_core/common/action.c ****     dprintf("%04X%c(%u)", (event.key.row<<8 | event.key.col), (event.pressed ? 'd' : 'u'), event.ti
+ 551:../../tmk_core/common/action.c **** }
+ 2014               		.loc 1 551 0
+ 2015 000e 0F90      		pop __tmp_reg__
+ 2016 0010 0F90      		pop __tmp_reg__
+ 2017 0012 0F90      		pop __tmp_reg__
+ 2018 0014 0F90      		pop __tmp_reg__
+ 2019 0016 0F90      		pop __tmp_reg__
+ 2020 0018 DF91      		pop r29
+ 2021 001a CF91      		pop r28
+ 2022 001c 0895      		ret
+ 2023               		.cfi_endproc
+ 2024               	.LFE13:
+ 2026               		.section	.text.debug_record,"ax",@progbits
+ 2027               	.global	debug_record
+ 2029               	debug_record:
+ 2030               	.LFB14:
+ 552:../../tmk_core/common/action.c **** 
+ 553:../../tmk_core/common/action.c **** void debug_record(keyrecord_t record)
+ 554:../../tmk_core/common/action.c **** {
+ 2031               		.loc 1 554 0
+ 2032               		.cfi_startproc
+ 2033 0000 CF93      		push r28
+ 2034               	.LCFI19:
+ 2035               		.cfi_def_cfa_offset 3
+ 2036               		.cfi_offset 28, -2
+ 2037 0002 DF93      		push r29
+ 2038               	.LCFI20:
+ 2039               		.cfi_def_cfa_offset 4
+ 2040               		.cfi_offset 29, -3
+ 2041 0004 00D0      		rcall .
+ 2042 0006 00D0      		rcall .
+ 2043 0008 00D0      		rcall .
+ 2044               	.LCFI21:
+ 2045               		.cfi_def_cfa_offset 10
+ 2046 000a CDB7      		in r28,__SP_L__
+ 2047 000c DEB7      		in r29,__SP_H__
+ 2048               	.LCFI22:
+ 2049               		.cfi_def_cfa_register 28
+ 2050               	/* prologue: function */
+ 2051               	/* frame size = 6 */
+ 2052               	/* stack size = 8 */
+ 2053               	.L__stack_usage = 8
+ 2054               	/* epilogue start */
+ 555:../../tmk_core/common/action.c ****     debug_event(record.event);
+ 556:../../tmk_core/common/action.c **** #ifndef NO_ACTION_TAPPING
+ 557:../../tmk_core/common/action.c ****     dprintf(":%u%c", record.tap.count, (record.tap.interrupted ? '-' : ' '));
+ 558:../../tmk_core/common/action.c **** #endif
+ 559:../../tmk_core/common/action.c **** }
+ 2055               		.loc 1 559 0
+ 2056 000e 2696      		adiw r28,6
+ 2057 0010 0FB6      		in __tmp_reg__,__SREG__
+ 2058 0012 F894      		cli
+ 2059 0014 DEBF      		out __SP_H__,r29
+ 2060 0016 0FBE      		out __SREG__,__tmp_reg__
+ 2061 0018 CDBF      		out __SP_L__,r28
+ 2062 001a DF91      		pop r29
+ 2063 001c CF91      		pop r28
+ 2064 001e 0895      		ret
+ 2065               		.cfi_endproc
+ 2066               	.LFE14:
+ 2068               		.section	.text.debug_action,"ax",@progbits
+ 2069               	.global	debug_action
+ 2071               	debug_action:
+ 2072               	.LFB15:
+ 560:../../tmk_core/common/action.c **** 
+ 561:../../tmk_core/common/action.c **** void debug_action(action_t action)
+ 562:../../tmk_core/common/action.c **** {
+ 2073               		.loc 1 562 0
+ 2074               		.cfi_startproc
+ 2075               	.LVL219:
+ 2076               	/* prologue: function */
+ 2077               	/* frame size = 0 */
+ 2078               	/* stack size = 0 */
+ 2079               	.L__stack_usage = 0
+ 2080 0000 0895      		ret
+ 2081               		.cfi_endproc
+ 2082               	.LFE15:
+ 2084               		.text
+ 2085               	.Letext0:
+ 2086               		.file 3 "c:\\program files (x86)\\mhv avr tools\\avr\\include\\stdint.h"
+ 2087               		.file 4 "../../tmk_core/common/keycode.h"
+ 2088               		.file 5 "../../tmk_core/common/action_code.h"
+ 2089               		.file 6 "../../tmk_core/common/action_macro.h"
+ 2090               		.file 7 "../../tmk_core/common/action.h"
+ 2091               		.file 8 "../../tmk_core/common/hook.h"
+ 2092               		.file 9 "../../tmk_core/common/action_tapping.h"
+ 2093               		.file 10 "../../tmk_core/common/action_util.h"
+ 2094               		.file 11 "../../tmk_core/common/host.h"
+ 2095               		.file 12 "../../tmk_core/common/action_layer.h"
+ 2096               		.file 13 "../../tmk_core/common/command.h"
+ 2097               		.file 14 "../../tmk_core/common/mousekey.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 action.c
+C:\msys64\tmp\ccbHpNss.s:2      *ABS*:0000003e __SP_H__
+C:\msys64\tmp\ccbHpNss.s:3      *ABS*:0000003d __SP_L__
+C:\msys64\tmp\ccbHpNss.s:4      *ABS*:0000003f __SREG__
+C:\msys64\tmp\ccbHpNss.s:5      *ABS*:0000003b __RAMPZ__
+C:\msys64\tmp\ccbHpNss.s:6      *ABS*:00000000 __tmp_reg__
+C:\msys64\tmp\ccbHpNss.s:7      *ABS*:00000001 __zero_reg__
+C:\msys64\tmp\ccbHpNss.s:14     .text.action_exec:00000000 action_exec
+C:\msys64\tmp\ccbHpNss.s:129    .text.register_code:00000000 register_code
+C:\msys64\tmp\ccbHpNss.s:461    .text.unregister_code:00000000 unregister_code
+C:\msys64\tmp\ccbHpNss.s:596    .text.register_mods:00000000 register_mods
+C:\msys64\tmp\ccbHpNss.s:622    .text.unregister_mods:00000000 unregister_mods
+C:\msys64\tmp\ccbHpNss.s:648    .text.process_action:00000000 process_action
+C:\msys64\tmp\ccbHpNss.s:1861   .text.clear_keyboard_but_mods:00000000 clear_keyboard_but_mods
+C:\msys64\tmp\ccbHpNss.s:1900   .text.clear_keyboard:00000000 clear_keyboard
+C:\msys64\tmp\ccbHpNss.s:1920   .text.is_tap_key:00000000 is_tap_key
+C:\msys64\tmp\ccbHpNss.s:1988   .text.debug_event:00000000 debug_event
+C:\msys64\tmp\ccbHpNss.s:2029   .text.debug_record:00000000 debug_record
+C:\msys64\tmp\ccbHpNss.s:2071   .text.debug_action:00000000 debug_action
+
+UNDEFINED SYMBOLS
+hook_matrix_change
+action_tapping_process
+host_keyboard_leds
+add_key
+send_keyboard_report
+del_key
+command_proc
+add_mods
+host_system_send
+host_consumer_send
+del_mods
+layer_switch_get_action
+layer_debug
+default_layer_debug
+__tablejump2__
+add_weak_mods
+del_weak_mods
+set_oneshot_mods
+clear_oneshot_mods
+get_mods
+mousekey_on
+mousekey_off
+mousekey_send
+default_layer_and
+default_layer_xor
+default_layer_or
+layer_and
+layer_xor
+layer_or
+layer_on
+layer_off
+layer_invert
+layer_move
+layer_clear
+action_get_macro
+action_macro_play
+action_function
+clear_weak_mods
+clear_keys
+mousekey_clear
+clear_mods
