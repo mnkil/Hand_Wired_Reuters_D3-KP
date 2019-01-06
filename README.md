@@ -1,7 +1,7 @@
 Hand wired Reuters D3-KP using two teensy 3.2 Development Boards
 ================================
 
-![title](https://github.com/mnkil/Hand_Wired_Reuters_D3-KP/tree/master/Pictures/IMG_1936.jpg
+![title](https://github.com/mnkil/Hand_Wired_Reuters_D3-KP/tree/master/Pictures/IMG_1936.JPG)
 
 Source code for the matrix keyboard layout is available here: <http://github.com/tmk/tmk_keyboard>
 
