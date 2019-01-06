@@ -31,3 +31,19 @@ Files and Directories
 Coding Style
 -------------
 Use 4 spaces, no tabs
+
+Pictures
+--------
+
+![title](Pictures/IMG_0614.JPG)
+![title](Pictures/IMG_0648.JPG)
+![title](Pictures/IMG_0615.JPG)
+![title](Pictures/IMG_0616.JPG)
+![title](Pictures/IMG_0661.JPG)
+![title](Pictures/IMG_0662.JPG)
+![title](Pictures/IMG_0664.JPG)
+![title](Pictures/IMG_0666.JPG)
+![title](Pictures/IMG_0671.JPG)
+![title](Pictures/IMG_3729.JPG)
+
+
